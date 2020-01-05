@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>http缓存探讨 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="web">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">http缓存探讨</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2019-06-14</span>
+  </div>
+  
+  <div class="post-content">
+    <p>业务场景：最近报了个问题，就是有个项目迭代更新时，有部分用户报进入后会白屏，必须ctrl+F5强制刷新才可以拉到最新的。看了后发现白屏原因是因为用户在我更新后访问的html页面还是旧的页面，所以里面的js引用的是旧的js（md5后缀），而旧的js地址在我更新后会删除，所以404，页面显示白屏…</p>
+<p>一开始我加了以下的代码：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Cache-Control"</span> <span class="attr">content</span>=<span class="string">"no-cache, no-store, must-revalidate"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Pragma"</span> <span class="attr">content</span>=<span class="string">"no-cache"</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">"Expires"</span> <span class="attr">content</span>=<span class="string">"0"</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>是的，无效，其实这段对不同的浏览器效果有差，不建议使用。</p>
+<hr>
+<h3 id="HTTP首部字段结构"><a href="#HTTP首部字段结构" class="headerlink" title="HTTP首部字段结构"></a>HTTP首部字段结构</h3><p>只列出部分</p>
+<p>1.通用首部字段（请求报文和响应报文都会使用的头部）：</p>
+<ul>
+<li><p>Cache-Control：控制缓存的行为</p>
+<p><a href="https://developer.mozilla.org/zh-CN/docs/Web/HTTP/Headers/Cache-Control" target="_blank" rel="noopener">Cache-Control</a></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Cache-Control: max-age=<span class="tag">&lt;<span class="name">seconds</span>&gt;</span></span><br><span class="line">Cache-Control: max-age=<span class="tag">&lt;<span class="name">seconds</span>&gt;</span></span><br><span class="line">Cache-Control: max-stale[=<span class="tag">&lt;<span class="name">seconds</span>&gt;</span>]</span><br><span class="line">Cache-Control: min-fresh=<span class="tag">&lt;<span class="name">seconds</span>&gt;</span></span><br><span class="line">Cache-control: no-cache ：强制向服务器进行验证（禁止强缓存，协商缓存可用）</span><br><span class="line">Cache-control: no-store ：禁止使用缓存</span><br><span class="line">Cache-control: no-transform</span><br><span class="line">Cache-control: only-if-cached：从缓存获取资源</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<ul>
+<li>Date：创建报文的日期时间</li>
+</ul>
+<p>2.请求首部字段</p>
+<ul>
+<li>if-Modified-Since：比较资源的更新时间</li>
+</ul>
+<p>3.响应首部字段</p>
+<ul>
+<li>ETag：资源的匹配信息</li>
+</ul>
+<p>4.实体首部字段</p>
+<ul>
+<li>Expires：实体主体过期的日期时间</li>
+<li>Last-Modified：资源的最后修改日期</li>
+</ul>
+<h3 id="浏览器缓存分类"><a href="#浏览器缓存分类" class="headerlink" title="浏览器缓存分类"></a>浏览器缓存分类</h3><blockquote>
+<p>目前主流的浏览器缓存分为两类，强缓存和协商缓存，它们的匹配流程如下：</p>
+<p>（1）浏览器发送请求前，根据请求头的expires和cache-control判断是否命中强缓存策略，如果命中，直接从缓存获取资源，并不会发送请求。如果没有命中，则进入下一步。</p>
+<p>（2）没有命中强缓存规则，浏览器会发送请求，根据请求头的last-modified和etag判断是否命中协商缓存，如果命中，直接从缓存获取资源。如果没有命中，则进入下一步。</p>
+<p>（3）如果前两步都没有命中，则直接从服务端获取资源。</p>
+</blockquote>
+<p><img src="https://anchen1204.github.io/2019/06/14/http%E7%BC%93%E5%AD%98%E6%8E%A2%E8%AE%A8/cache1.png" alt=""></p>
+<p>发现新打开页面时Status Code都是200 （from disk cache）。然后在此页面上刷新就是304。</p>
+<p><strong>强缓存</strong></p>
+<p>从from disk cache得知，其实浏览器一直拿的自己的缓存，所以导致根本没有拉到我最新更新的文件，这时只有强制刷新才能拿到（200）。这个状态是强缓存的结果，有<code>expires/cache-control</code>控制：</p>
+<blockquote>
+<p>1.expires(http 1.0版有效)是绝对时间；是http1.0的功能。如果浏览器的时间没有超过这个expires的时间，代表缓存还有效，命中强缓存，直接从缓存读取资源。不过由于存在浏览器和服务端时间可能出现较大误差，所以在之后http1.1提出了cache-control。</p>
+<p>2.cache-control的值是相对时间，当浏览器第一次请求资源的时候，会把response header的内容缓存下来。之后的请求会先从缓存检查该response header，通过第一次请求的date和cache-control计算出缓存有效时间。如果浏览器的时间没有超过这个缓存有效的时间，代表缓存还有效，命中强缓存，直接从缓存读取资源。</p>
+<p>Expires用时刻来标识失效时间，不免收到时间同步的影响，而Cache-Control使用时间间隔很好的解决了这个问题。 但是 Cache-Control 是 HTTP1.1 才有的，不适用于 HTTP1.0，而 Expires 既适用于 HTTP1.0，也适用于 HTTP1.1，所以说在大多数情况下同时发送这两个头会是一个更好的选择，当客户端两种头都能解析的时候，会<strong>优先使用 Cache-Control</strong>。</p>
+</blockquote>
+<p>补充一下:Chrome在高版本更新了缓存策略,原来的<code>from cache</code>变成了<code>from disk cache(磁盘缓存)</code>和<code>from memory cache(内存缓存)</code>。</p>
+<p><strong>协商缓存(弱缓存)</strong></p>
+<p>后面在页面上刷新拿到的304，实际上就是协商缓存的结果。</p>
+<blockquote>
+<p>配置Last-Modified/ETag的情况下，浏览器再次访问统一URI的资源，还是<strong>会发送请求</strong>到服务器询问文件是否已经修改，如果没有，服务器会只发送一个304回给浏览器，告诉浏览器直接从自己本地的缓存取数据；如果修改过那就整个数据重新发给浏览器；</p>
+<p>你可能会觉得使用Last-Modified已经足以让浏览器知道本地的缓存副本是否足够新，为什么还需要Etag（实体标识）呢？HTTP1.1中Etag的出现主要是为了解决几个Last-Modified比较难解决的问题：</p>
+<ol>
+<li>Last-Modified标注的最后修改只能精确到<strong>秒级</strong>，如果某些文件在1秒钟以内，被修改多次的话，它将不能准确标注文件的新鲜度</li>
+<li>如果某些文件会被定期生成，当有时内容并没有任何变化，但Last-Modified却改变了，导致文件没法使用缓存</li>
+<li>有可能存在服务器没有准确获取文件修改时间，或者与代理服务器时间不一致等情形</li>
+</ol>
+<p>Etag是服务器自动生成或者由开发者生成的对应资源在服务器端的唯一标识符，能够更加准确的控制缓存。Last-Modified与ETag是可以一起使用的，<strong>服务器会优先验证ETag</strong>，一致的情况下，才会继续比对Last-Modified，最后才决定是否返回304。Etag的服务器生成规则和强弱Etag的相关内容可以参考，《<a href="http://www.hudong.com/wiki/Etag" target="_blank" rel="noopener">互动百科-Etag</a>》和《<a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html" target="_blank" rel="noopener">HTTP Header definition</a>》</p>
+</blockquote>
+<blockquote>
+<p>一般情况下，使用Cache-Control/Expires会配合Last-Modified/ETag一起使用，因为即使服务器设置缓存时间, 当用户点击“刷新”按钮时，浏览器会忽略缓存继续向服务器发送请求，这时Last-Modified/ETag将能够很好利用304，从而减少响应开销。</p>
+</blockquote>
+<p><strong>强缓存与协商缓存总结</strong></p>
+<ol>
+<li>强缓存阶段：先在本地查找该资源，如果发现该资源，并且其他限制也没有问题(比如:缓存有效时间)，就命中强缓存，返回200，直接使用强缓存，并且不会发送请求到服务器。（不对服务器发送请求）</li>
+<li>弱缓存阶段：在本地缓存中找到该资源，发送一个http请求到服务器，服务器判断这个资源没有被改动过，则返回304，让浏览器使用该资源。（需要发送请求，验证是否可以使用本地缓存）</li>
+<li>缓存失败阶段(重新请求)：当服务器发现该资源被修改过，或者在本地没有找到该缓存资源，服务器则返回该资源的数据。</li>
+</ol>
+<p>新建页面会先验证强缓存。</p>
+<p>F5刷新导致强缓存失效。</p>
+<p>ctrl+F5 所有缓存都失效。</p>
+<p><strong>启发式缓存</strong></p>
+<p>那么问题肯定是缓存造成的，为什么会出现这样的情况，就可以排查了。</p>
+<p>发现第一次访问200 （from disk cache）的时候，请求头（Request Header）显示<code>Provisional header are shown</code>,相关信息不能查看。</p>
+<p>有这个提示通常可能的情况是：</p>
+<blockquote>
+<ol>
+<li>跨域，请求被浏览器拦截</li>
+<li>请求被浏览器插件拦截</li>
+<li>服务器出错或者超时，没有真正的返回</li>
+<li>强缓存from disk cache或者from memory cache，此时也不会显示</li>
+</ol>
+</blockquote>
+<p>这里就是第4种情况。请求头不带缓存相关字段，如果本地缓存版本有效，从缓存读取，不发请求，并显示个假请求头。</p>
+<p>找到了一篇很受启发的文章：</p>
+<p><a href="https://zhuanlan.zhihu.com/p/24467558" target="_blank" rel="noopener">【腾讯Bugly干货分享】彻底弄懂 Http 缓存机制 - 基于缓存策略三要素分解法</a></p>
+<p>因为这里的请求头不带缓存相关字段，所以使用了缓存过期的策略，影响要素在于：在没有任何缓存相关字段的情况下，客户端计算响应头中2个时间字段Date和Last-Modified之间的差值，取该值的10%作为缓存过期周期。这段时间内会直接使用本地缓存数据而不会再去请求服务器（强制请求除外），缓存过期后，会再次请求服务端，并携带上 Last-Modified 指定的时间去服务器对比并根据服务端的响应状态决定是否要从本地加载缓存数据。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-1494676f664d40eff41e37bfbc522323_hd.png" alt=""></p>
+<p>接着对比实际的返回头发现，问题果然出现在Last-Modified。在这个问题页面里，Last-Modified的这个时间值竟然不会变，似乎一直停留在了5月份。</p>
+<p>后来发现似乎是gitlab ci构建镜像输出的生产文件时间有误，经过修正又恢复了正常。。。</p>
+<p><strong>cookie和session</strong></p>
+<p>cookie和session都是为了弥补http协议的无状态特性，对server端来说无法知道两次http请求是否来自同一个用户，利用cookie和session就可以让用户只登录一次，server就知道某个请求是否需用重新登录。</p>
+<ol>
+<li><p>cookie：客户端第一次正常访问服务器，服务器在response headers中返回与用户信息相关的cookie，客户端收到后把cookie保存在本地，下次再发请求时会在request headers中带上这个cookie，服务器收到这个cookie就知道用户状态了。cookie可以设置过期时间，默认值是-1，表示关闭浏览器时cookie就会失效，值为0时表示立马失效，相当于删除cookie（cookie没有删除的方法），服务器和客户端都可以设置cookie，但不可以操作另一个域名下的cookie。</p>
+</li>
+<li><p>session: 客户端第一次正常访问服务器，服务器生成一个sessionid来标识用户并保存用户信息（服务器有一个专门的地方来保存所有用户的sessionId），在response headers中作为cookie的一个值返回，客户端收到后把cookie保存在本地，下次再发请求时会在request headers中带上这个sessionId，服务器通过查找这个sessionId就知道用户状态了，并更新sessionId的最后访问时间。sessionId也会可以设置失效时间，比如如果60分钟内某个session都没有被更新，服务器就会删除这个它。</p>
+</li>
+</ol>
+<p>所有，cookie是保存在客户端，session是存在服务器，session依赖于cookie。</p>
+<hr>
+<p>备注：<a href="https://docs.gitlab.com/ee/ci/yaml/README.html#git-strategy" target="_blank" rel="noopener">https://docs.gitlab.com/ee/ci/yaml/README.html#git-strategy</a>(强制gitlab ci时候每次都通过clone来获取代码，以确保拿到代码时间戳是构建开始时间):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">variables:</span><br><span class="line">  GIT_STRATEGY: clone</span><br></pre></td></tr></table></figure>
+<p>其他参考：</p>
+<p><a href="https://book.douban.com/subject/25863515/" target="_blank" rel="noopener">《图解HTTP》</a></p>
+<p><a href="http://www.alloyteam.com/2012/03/web-cache-2-browser-cache/" target="_blank" rel="noopener">Web缓存机制系列</a></p>
+<p><a href="https://juejin.im/post/5bf3c28ee51d4514df5b7625" target="_blank" rel="noopener">浅聊HTTP缓存 (HTTP Cache)</a></p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/web/">web</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>webpack使用 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="工作流">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">webpack使用</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-10-17</span>
+  </div>
+  
+  <div class="post-content">
+    <h3 id="webpack有什么用"><a href="#webpack有什么用" class="headerlink" title="webpack有什么用"></a>webpack有什么用</h3><p>可以帮助我们把多个js文件打包为1个入口文件，并且可以按需加载。也就是无需担心太多组件导致过多的http请求。同时webpack也可以编译.vue文件，如果没有使用一个loader去转换我们的.vue文件里的style、js、html，浏览器无法识别。</p>
+<h3 id="模块热加载"><a href="#模块热加载" class="headerlink" title="模块热加载"></a>模块热加载</h3><p>webpack的模块热加载可以为单页应用带来便利，当我们修改代码刷新页面后，应用里所有状态就都没有了，需要再重新跑一次。而模块热加载就是当你修改代码后，页面不会被刷新，状态也可以保留下来。</p>
+<h3 id="一-安装"><a href="#一-安装" class="headerlink" title="一.安装"></a>一.安装</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">//全局安装</span><br><span class="line"></span><br><span class="line">npm install -g webpack</span><br><span class="line"></span><br><span class="line">//安装到你的项目目录</span><br><span class="line"></span><br><span class="line">npm install --save-dev webpack</span><br></pre></td></tr></table></figure>
+<h3 id="二-使用"><a href="#二-使用" class="headerlink" title="二.使用"></a>二.使用</h3><p>1.建立一个空文件夹，暂命名为webpack；</p>
+<p>2.建立一个package.json的的npm说明文件，将用来记录当前项目的依赖模块，自定义脚本任务等。也可以在终端使用<code>npm init</code>自动建立；</p>
+<p><img src="http://upload-images.jianshu.io/upload_images/1031000-976ba1a06fd0702f.png?imageMogr2/auto-orient/strip%7CimageView2/2" alt="">。</p>
+<p>4.文件对应的内容如下：</p>
+<ul>
+<li><strong>index.html</strong>文件只有最基础的html代码，它唯一的目的就是加载打包后的js文件（bundle.js）:</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE html&gt;&lt;html lang=&quot;en&quot;&gt;&lt;head&gt;&lt;meta charset=&quot;utf-8&quot;&gt;&lt;title&gt;Webpack Sample Project&lt;/title&gt;&lt;/head&gt;&lt;body&gt;&lt;div id=&apos;root&apos;&gt;&lt;/div&gt;&lt;script src=&quot;bundle.js&quot;&gt;&lt;/script&gt;&lt;/body&gt;&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>Greeter.js</strong>只包括一个用来返回包含问候信息的html元素的函数。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// Greeter.jsmodule.exports = function() &#123;</span><br><span class="line">  var greet = document.createElement(&apos;div&apos;);</span><br><span class="line">  greet.textContent = &quot;Hi there and greetings!&quot;;</span><br><span class="line">  return greet;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><strong>main.js</strong>用来把Greeter模块返回的节点插入页面。</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">//main.js var greeter = require(&apos;./Greeter.js&apos;);</span><br><span class="line">document.getElementById(&apos;root&apos;).appendChild(greeter());</span><br></pre></td></tr></table></figure>
+<p>5.通过配置文件来使用webpack</p>
+<p>在当前的webpack文件夹下新建一个名为webpack.config.js的文件，内容如下(注意entry里的引用写法，这里跟原文有差):</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">module.exports = &#123;</span><br><span class="line"></span><br><span class="line">  entry:  &quot;../webpack/app/main.js&quot;,//已多次提及的唯一入口文件</span><br><span class="line"></span><br><span class="line">  output: &#123;</span><br><span class="line"></span><br><span class="line">    path:  &quot;public&quot;,//打包后的文件存放的地方</span><br><span class="line"></span><br><span class="line">    filename: &quot;bundle.js&quot;//打包后输出文件的文件名</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>6.编译</p>
+<p>在webpack文件夹下打开命令行，输入</p>
+<p><code>webpack</code></p>
+<p>编译成功后打开index.html就可以看到内容。</p>
+<p><em>7.更快捷的打包方式</em></p>
+<p>在package.json里进行配置：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  &quot;name&quot;: &quot;package&quot;,</span><br><span class="line">  &quot;version&quot;: &quot;1.0.0&quot;,</span><br><span class="line">  &quot;description&quot;: &quot;test 1.0&quot;,</span><br><span class="line">  &quot;main&quot;: &quot;index.js&quot;,</span><br><span class="line">  &quot;scripts&quot;: &#123;</span><br><span class="line">    &quot;start&quot;: &quot;webpack&quot; //把npm的start命令指向webpack命令</span><br><span class="line"></span><br><span class="line">  &#125;,</span><br><span class="line">  &quot;author&quot;: &quot;Anchen&quot;,</span><br><span class="line">  &quot;license&quot;: &quot;ISC&quot;,</span><br><span class="line">  &quot;devDependencies&quot;: &#123;</span><br><span class="line">    &quot;webpack&quot;: &quot;^1.13.3&quot;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>然后使用<code>npm start</code> 命令就可以，注意注释最后要去掉，否则会有一堆错误（亲测）。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/工作流/">工作流</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

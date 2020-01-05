@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>jQuery中的事件绑定/委托 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="JavaScript">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">jQuery中的事件绑定/委托</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-01-07</span>
+  </div>
+  
+  <div class="post-content">
+    <p>jQuery的事件委托和绑定其实是一个非常重要的内容，之前可能用on或者bind比较多，但最近做页面发现其实应该把这些东西总结一下，根据情况选择最恰当的方式。</p>
+<p>主要探讨的是以下事件：delegate()、bind()、on()通过例子和对比来加深印象。</p>
+<h3 id="bind"><a href="#bind" class="headerlink" title="bind()"></a>bind()</h3><p><code>$(&#39;a&#39;).bind(&#39;click&#39;,function(){alert(&quot;ok&quot;);})</code>  </p>
+<p>其实可以简写为：</p>
+<p><code>$(&#39;a&#39;).click(function(){alert(&quot;ok&quot;);})</code></p>
+<p>这样就好懂多了吧。</p>
+<p>bind有两个问题：</p>
+<p>1.当匹配的元素过多，比如页面有40个a标签，就得执行40次绑定，影响性能；</p>
+<p>2.对于页面上还未存在的元素，就算动态添加后，是无法执行这个绑定事件的。</p>
+<p>而delegate()恰好可以解决这两个问题。</p>
+<h3 id="elegate"><a href="#elegate" class="headerlink" title="elegate()"></a>elegate()</h3><p><code>$(*selector*).delegate(*childSelector*,*event*,*data*,*function*)</code></p>
+<p>delegate()方法为指定的元素（属于被选元素的子元素）添加一个或多个事件处理，使用这个方法的事件处理程序适用于当前或未来的元素。</p>
+<p>这是怎么理解呢？对比一下bind：</p>
+<p><code>$(&#39;a&#39;).bind(&#39;click&#39;,function(){alert(&quot;ok&quot;);})</code></p>
+<p>这是bind的用法，给页面的a元素绑定一个点击事件，点击后弹出内容。</p>
+<p>那么用delegate是这样的：</p>
+<p><code>$(document).delegate(&#39;a&#39;, &#39;click&#39;, function() { alert(&#39;ok;)});</code></p>
+<p><strong>bind直接将方法绑定到独立的元素上，但它不能将方法绑定到一个暂时还未出现的元素上</strong>。而<strong>delegate方法是将事件方法绑定到一个需要作用的元素它的父元素上，那么这个元素是否已经存在都可以被处理</strong>。</p>
+<p>另外，将一个方法绑定到一个或者一组父元素比直接为页面上的每个元素（特别是数量很多的情况下）绑定方法无疑更有效率。</p>
+<h3 id="on"><a href="#on" class="headerlink" title="on()"></a>on()</h3><p>live()方法在jq1.9版本已经被删除，用on来代替。</p>
+<p>之前我们这么写：</p>
+<p><code>$(&#39;a&#39;).live(&#39;click&#39;,function(){alert(&quot;ok&quot;);})</code></p>
+<p>现在用on需要这么写</p>
+<p><code>$(document ).on(&#39;click&#39;,&#39;a&#39;,function(){alert(&quot;ok&quot;)})</code></p>
+<p>再解释一遍，我的页面有一个id为a的div，我将要在它里面动态添加一个class为b的子元素，然后给这个b绑定一个事件，我需要这么写：</p>
+<p><code>$(&#39;#a&#39;).on(&#39;click&#39;,&#39;.b&#39;,function(){}）</code></p>
+<p>是不是跟delegate()很像…</p>
+<p>它也可以这么使用：</p>
+<p><code>$(&#39;a&#39;).bind(&#39;click&#39;,function(){alert(&quot;ok&quot;);})</code></p>
+<p>==</p>
+<p><code>$(&#39;a&#39;).on(&#39;click&#39;,function(){alert(&quot;ok&quot;);})</code></p>
+<p>也就是说on()方法可以替代live()，可以替代delegate(),也可以替代bind().</p>
+<p>综上，on()是最为推荐的方法。但是根据情况仍然可以选择其他适合的替代写法。</p>
+<p>除此之外，如需溢出事件绑定，可以用off()方法：</p>
+<p><code>$(&#39;a&#39;).off(&#39;click&#39;)</code></p>
+<p>添加只运行一次的事件然后移除，可使用one()方法。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

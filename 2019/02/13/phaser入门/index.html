@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>phaser入门 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="其他框架">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">phaser入门</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2019-02-13</span>
+  </div>
+  
+    <div id="toc" class="toc-article">
+      <strong class="toc-title">文章目录</strong>
+    
+    </div>
+    
+  <div class="post-content">
+    <p><a href="https://segmentfault.com/a/1190000009212221" target="_blank" rel="noopener">https://segmentfault.com/a/1190000009212221</a></p>
+<p>用这个例子来做修改，修改的功能点如下，也是原作者留白的内容</p>
+<ul>
+<li><p>游戏中字体的更换</p>
+</li>
+<li><p>地面应该和小恐龙底部持平，而非屏幕底部，如何实现？</p>
+</li>
+<li><p>现在三种苹果和炸弹的出现概率是随机的，如何调整它们各自的出现概率？</p>
+</li>
+<li><p>现在苹果和炸弹出现的时间间隔是固定的，如何随着游戏进行加快节奏？</p>
+</li>
+<li><p>如何调整游戏难度梯度？</p>
+</li>
+<li><p>现在炸弹和苹果有可能会相邻出现，导致很难接到苹果而不碰到炸弹，如何避免？</p>
+</li>
+</ul>
+<p><strong>游戏中字体的更换 </strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title = game.add.text(game.world.centerX, game.world.height * <span class="number">0.25</span>, <span class="string">'0'</span>, &#123;</span><br><span class="line">                   font:<span class="string">'bold 60px Helvetica'</span>,</span><br><span class="line">                   fill:<span class="string">'#f2bb15'</span></span><br><span class="line">               &#125;);</span><br></pre></td></tr></table></figure>
+<p><strong>地面应该和小恐龙底部持平，而非屏幕底部，如何实现？</strong></p>
+<p>首先应该实现一个地板，</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">game.load.image(<span class="string">'ground'</span>, <span class="string">'//peiwan.bs2dlssl.huanjuyun.com/da38bffbb5954779887ad623c5cc2b10.png'</span>);<span class="comment">//预先加载地板的图片</span></span><br></pre></td></tr></table></figure>
+<p>像加man一样加到场景中：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//地面 </span></span><br><span class="line">platforms =game.add.sprite(game.world.centerX, game.world.height * <span class="number">0.84</span> , <span class="string">'ground'</span>);</span><br><span class="line"><span class="keyword">var</span> groundImg = game.cache.getImage(<span class="string">'ground'</span>);</span><br><span class="line">platforms.width = game.world.width;</span><br><span class="line">platforms.height = platforms.width/groundImg.width * groundImg.height;</span><br><span class="line">platforms.anchor.setTo(<span class="number">0.5</span>, <span class="number">0</span>);</span><br></pre></td></tr></table></figure>
+<p>注释掉苹果与游戏边缘碰撞的代码，因为现在要变成苹果与地板的碰撞。这里还是用物理碰撞overlap。</p>
+<p>所以要碰撞的两个物体都要加入物理系统，才能开启物体的物理特性，苹果已经加入了，现在加入地板的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">game.physics.enable(platforms);</span><br></pre></td></tr></table></figure>
+<p>开启物理特性后的对象后就有了body属性，我们这里要用到body的allowGravity（是否启用重力效果）；如果不用的话默认是true，它放在游戏里后就会自动下落直到出边界，很明显我们不是要这样的效果，地板是不用下沉的。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">platforms.body.allowGravity = <span class="literal">false</span>;</span><br></pre></td></tr></table></figure>
+<p>最后跟man和apples一样检测碰撞并且执行碰撞后的函数就可以了</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">game.physics.arcade.overlap(platforms,apples,failgame,<span class="literal">null</span> ,<span class="keyword">this</span>);</span><br><span class="line">...</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">failgame</span>(<span class="params">platforms, apple</span>)</span>&#123;</span><br><span class="line">             apple.kill();</span><br><span class="line">             <span class="keyword">if</span> (apple.type !== <span class="string">'bomb'</span>) game.state.start(<span class="string">'over'</span>, <span class="literal">true</span>, <span class="literal">false</span>, score);</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+<p>在设置地板的过程中，开了debug，敲好用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.render=<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    game.debug.body(platforms);           </span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>拓展一下，如果我的苹果掉落不需要消失，而是停留在地面上呢？</p>
+<p>首先要知道，在Arcade物理引擎中，碰撞检测主要用到两个函数，一个是collide，还有一个是overlap。</p>
+<p>collide方法与overlap的区别在于collide会影响两个要检测的对象之间的物理状态，比如使用collide函数去检测两个物体，如果物体碰撞了，那么这两个物体之间就会有力的相互作用，可能其中一个会被另一个弹开，或者两个之间相互弹开。</p>
+<p>但如果使用overlap方法的话，则只会检测两个物体是否已经碰撞了，或者说已经重叠了，并不会产生物理作用。</p>
+<p>所以如果是这样的情况，我们要使用collide来进行碰撞检测：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">game.physics.arcade.collide(platforms, apples);</span><br></pre></td></tr></table></figure>
+<p>同时，地板需要在加一个属性：immovable,不设置的话，地板会被苹果砸下去</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">platforms.body.immovable = <span class="literal">true</span>;<span class="comment">//设置是否固定不动</span></span><br></pre></td></tr></table></figure>
+<p><strong>现在三种苹果和炸弹的出现概率是随机的，如何调整它们各自的出现概率？</strong></p>
+<p>首先看原来的代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 添加苹果组</span></span><br><span class="line"><span class="keyword">var</span> apples = game.add.group();</span><br><span class="line"><span class="comment">// 苹果类型</span></span><br><span class="line"><span class="keyword">var</span> appleTypes = [<span class="string">'green'</span>, <span class="string">'red'</span>, <span class="string">'yellow'</span>];</span><br><span class="line"><span class="keyword">var</span> appleTimer = game.time.create(<span class="literal">true</span>);</span><br><span class="line">appleTimer.loop(<span class="number">1000</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">var</span> x = <span class="built_in">Math</span>.random() * game.world.width;</span><br><span class="line">    <span class="keyword">var</span> y = <span class="built_in">Math</span>.random() * game.world.height;</span><br><span class="line">    <span class="keyword">var</span> type = appleTypes[<span class="built_in">Math</span>.floor(<span class="built_in">Math</span>.random() * appleTypes.length)];</span><br><span class="line">    apples.create(x, y, type);</span><br><span class="line">&#125;);</span><br><span class="line">appleTimer.start()</span><br></pre></td></tr></table></figure>
+<p><code>add</code>和<code>loop</code>两个方法，分别对应setTimeout和setInterval，效果是每隔1秒就会在屏幕随机位置出现一个苹果了，而且种类是随机的。</p>
+<p>可以看出，掉落的种类主要是这一句：</p>
+<p><code>var type = appleTypes[Math.floor(Math.random() * appleTypes.length)]</code>。</p>
+<p>简单来说就是[0,1,2,3] 这个数组随机选一个随机数，现在我们要求的是给他们加权重，来选择随机数.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">weightedRand</span>(<span class="params">spec</span>) </span>&#123;</span><br><span class="line">  <span class="keyword">var</span> i, sum=<span class="number">0</span>, r=<span class="built_in">Math</span>.random();</span><br><span class="line">  <span class="keyword">for</span> (i <span class="keyword">in</span> spec) &#123;</span><br><span class="line">    sum += spec[i];</span><br><span class="line">    <span class="keyword">if</span> (r &lt;= sum) <span class="keyword">return</span> i;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">weightedRand(&#123;<span class="number">0</span>:<span class="number">0.4</span>, <span class="number">1</span>:<span class="number">0.2</span>, <span class="number">2</span>:<span class="number">0.1</span>,<span class="number">3</span>:<span class="number">0.3</span>&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> type = appleTypes[weightedRand(&#123;<span class="number">0</span>:<span class="number">0.4</span>, <span class="number">1</span>:<span class="number">0.2</span>, <span class="number">2</span>:<span class="number">0.1</span>,<span class="number">3</span>:<span class="number">0.3</span>&#125;)];</span><br></pre></td></tr></table></figure>
+<p><strong>现在苹果和炸弹出现的时间间隔是固定的，如何随着游戏进行加快节奏？</strong></p>
+<p>原代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">appleTimer.loop(<span class="number">1000</span>, <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;&#125;)</span><br></pre></td></tr></table></figure>
+<p>所以我们首先要想获取游戏时间，然后让时间间隔随着游戏时间的增加来减少。</p>
+<p><code>this.game.time.totalElapsedSeconds()</code>可以计算从打开页面到现在的时间。<a href="https://www.phaser-china.com/example-detail-586.html" target="_blank" rel="noopener">demo</a></p>
+<p>我想了下觉得，无限循环loop有些不适用,改成<code>game.time.events.add(loopTime, appleDown,this);</code></p>
+<p>苹果/炸弹的添加用个appleDown函数包起来，定义一个变量appleTimeInterval来记录游戏时间,根据游戏时间修改loopTime（间隔）。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">appleDown</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">    	...</span><br><span class="line">        <span class="comment">/*以下为新增*/</span></span><br><span class="line">       appleTimeInterval= game.time.totalElapsedSeconds();</span><br><span class="line">       <span class="keyword">if</span>(appleTimeInterval&gt;<span class="number">10</span> &amp;&amp; appleTimeInterval&lt;<span class="number">20</span>)&#123;</span><br><span class="line">            loopTime = <span class="number">1000</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span> <span class="keyword">if</span>(appleTimeInterval&gt;<span class="number">20</span>)&#123;</span><br><span class="line">             loopTime = <span class="number">500</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">console</span>.log(loopTime)</span><br><span class="line">        game.time.events.add(loopTime, appleDown,<span class="keyword">this</span>); </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><strong>如何调整游戏难度梯度？</strong></p>
+<p>这比较笼统了，可以设定炸弹出现的频率或者缩短apple的时间间隔？</p>
+<p><strong>现在炸弹和苹果有可能会相邻出现，导致很难接到苹果而不碰到炸弹，如何避免？</strong></p>
+<p>这个问题看这段:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x = <span class="built_in">Math</span>.random() * game.world.width;</span><br><span class="line"><span class="keyword">var</span> type = appleTypes[weightedRand(&#123;<span class="number">0</span>:<span class="number">0.4</span>, <span class="number">1</span>:<span class="number">0.2</span>, <span class="number">2</span>:<span class="number">0.1</span>,<span class="number">3</span>:<span class="number">0.3</span>&#125;)];              </span><br><span class="line"><span class="keyword">var</span> apple = apples.create(x, <span class="number">0</span>, type);</span><br></pre></td></tr></table></figure>
+<p>所以只要对比x的值，如果炸弹的x值跟上一个苹果的值太接近，我们就重新生成x的值：定义一个用来保存上一个x值的变量<code>lastAppleX</code>，当生成是炸弹时，才需要进行对比。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> appleWidth = game.world.width / <span class="number">8</span>;</span><br><span class="line"><span class="keyword">var</span> x = <span class="built_in">Math</span>.random() * game.world.width;</span><br><span class="line"><span class="keyword">var</span> type = appleTypes[weightedRand(&#123; <span class="number">0</span>: <span class="number">0.4</span>, <span class="number">1</span>: <span class="number">0.2</span>, <span class="number">2</span>: <span class="number">0.1</span>, <span class="number">3</span>: <span class="number">0.3</span> &#125;)];</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (type == <span class="string">'bomb'</span>) &#123;</span><br><span class="line">      <span class="keyword">var</span> twoDistance = <span class="built_in">Math</span>.abs(lastAppleX - x);</span><br><span class="line">      <span class="built_in">console</span>.log(<span class="string">'间隔:'</span> + twoDistance)</span><br><span class="line">      <span class="keyword">if</span> (twoDistance &lt; appleWidth) &#123;</span><br><span class="line">          <span class="built_in">console</span>.log(<span class="string">'间隔太小'</span>)</span><br><span class="line">          appleDown();</span><br><span class="line">          <span class="keyword">return</span>;</span><br><span class="line">      &#125; </span><br><span class="line">    <span class="keyword">var</span> apple = apples.create(x, <span class="number">0</span>, type);</span><br><span class="line">    lastAppleX = x; <span class="comment">//记录上一个x                   </span></span><br><span class="line">    apple.type = type;</span><br></pre></td></tr></table></figure>
+<p>写到这里我又想起，如果是上一个是炸弹，然后是苹果呢？所以还要记录下type,并修改当本次与上次掉落不同东西才去对比：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (type !== lastType) &#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'different type'</span>)</span><br><span class="line">   <span class="keyword">var</span> twoDistance = <span class="built_in">Math</span>.abs(lastAppleX - x);</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="string">'间隔:'</span> + twoDistance)</span><br><span class="line">   <span class="keyword">if</span> (twoDistance &lt; appleWidth) &#123;</span><br><span class="line">       <span class="built_in">console</span>.log(<span class="string">'间隔太小'</span>)</span><br><span class="line">       appleDown();</span><br><span class="line">       <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> apple = apples.create(x, <span class="number">0</span>, type);</span><br><span class="line">lastAppleX = x; <span class="comment">//记录上一个x                   </span></span><br><span class="line">apple.type = type;</span><br><span class="line">lastType = apple.type;<span class="comment">//记录上一个type</span></span><br></pre></td></tr></table></figure>
+<p>至此也就完成了原作者留白的功能点。但是如果要用到实际的项目中，我们还是可以再拓展。</p>
+<p><strong>运营活动中可能还需要这个游戏做些什么呢？</strong></p>
+<ol>
+<li><p>派券</p>
+<p>根据最后玩的分数，派出不同的券，假设50分以下为“30-5”优惠券，50-100分为“30-10”优惠券，100分以上是“20-10”优惠券。</p>
+<p>这里涉及几个必须的点：</p>
+<ul>
+<li>控制数量/成本,假设我有“30-5”的券20张，”30-10“的券10张，”20-10”的券5张；</li>
+<li>控制设备防刷，假定每个人每台设备一天只能玩一次；</li>
+</ul>
+</li>
+<li><p>分享</p>
+<p>这几乎是必然有的，微信分享本人的分数到朋友圈或者微信好友</p>
+</li>
+<li><p>… </p>
+</li>
+</ol>
+<p>1、2点涉及到游戏的over状态，取score值。根据score来操作即可。</p>
+<p>控制设备的在游戏的preload开始场景，可以在这里进行判断，如果不符合则加载另外的提示，有时候也需要在over状态进行提示，可能用户不在乎领券只是想玩一下。</p>
+<p>分享的可以有一个静态h5来替换游戏地址，上面显示用户分数。</p>
+<hr>
+<p>修改后代码地址：<br><a href="https://github.com/anchen1204/game/blob/master/pharser-apple-example1/demo/game.js" target="_blank" rel="noopener">https://github.com/anchen1204/game/blob/master/pharser-apple-example1/demo/game.js</a></p>
+<p>参考:</p>
+<p><a href="https://www.phaser-china.com/example.html" target="_blank" rel="noopener">https://www.phaser-china.com/example.html</a></p>
+<p><a href="https://ryangun.github.io/2018/01/04/Phaser%E5%9F%BA%E7%A1%80%E7%AF%87%E4%B8%8A/" target="_blank" rel="noopener">https://ryangun.github.io/2018/01/04/Phaser%E5%9F%BA%E7%A1%80%E7%AF%87%E4%B8%8A/</a>  </p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/其他框架/">其他框架</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

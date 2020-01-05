@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>socket.io - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="socket">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">socket.io</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2017-03-08</span>
+  </div>
+  
+  <div class="post-content">
+    <p>最近在看socket.io，想理一理思绪。</p>
+<p>先丢一堆问题：</p>
+<ul>
+<li>什么是WebSocket？有什么用？</li>
+<li>什么是socket.io，跟WebSocket的关系？</li>
+<li>socket跟Ajax的区别？</li>
+<li>怎么使用socket.io?</li>
+</ul>
+<h2 id="WebSocket"><a href="#WebSocket" class="headerlink" title="WebSocket"></a>WebSocket</h2><p>WebSocket是对在服务器和客户端之间实现双向实时通信问题的响应。就是在web服务器和浏览器之间保持持久打开，相当于建了一座桥，让两边的信息可以随时推送数据。它的核心就是“实时”。</p>
+<h2 id="Socket-IO"><a href="#Socket-IO" class="headerlink" title="Socket.IO"></a>Socket.IO</h2><p>socket.io是NodeJs的一个模块，为了可以方便使用WebSocket问题。它提供服务器和浏览器之间的响应的组件，只需要一个模块就可以给应用程序加入对WebSocket的支持，并且，Socket.IO支持4种协议：WebSocket、htmlfile、xhr-polling、jsonp-polling，它会自动根据浏览器选择适合的通讯方式，也因此可以解决浏览器对WebSocket的支持问题。</p>
+<p>总而言之，它可以很方便构建支持WebSocket的模块，把应用程序实时通信变得简单，而且几乎可以支持所有常用的浏览器实现。</p>
+<p>它跟Ajax的区别在于，它提供的功能更多，比如很容易实时地将数据推送给客户端。并且WebSocket的一大特性就是实时连接，这是持久的过程，而Ajax则是每次都需要建立连接。</p>
+<p>但是它们的服务目标也是不同，所以并不能说就只用socket。Ajax适合只需要时不时请求一下数据，并且可能需要缓冲的场景。</p>
+<h2 id="聊天室例子"><a href="#聊天室例子" class="headerlink" title="聊天室例子"></a>聊天室例子</h2><p>通过例子来学习是最快的理解方式，这里选了一个聊天室的例子。</p>
+<p><strong>安装</strong></p>
+<p>服务器端使用socket.io:</p>
+<p>nodejs服务器端安装：npm install socket.io<br>安装之后就可以require模块来使用了:</p>
+<p><code>var io = require(&#39;socket.io&#39;);</code></p>
+<p>客户端安装直接在页面想引用外部链js那样即可：<code>&lt;script src=&quot;/socket.io/socket.io.js&quot;&gt;&lt;/script&gt;</code></p>
+<p><strong>思路</strong></p>
+<p>聊天室的逻辑点其实很简单，就是进入房间，开聊，退出房间。</p>
+<p><strong>构建</strong></p>
+<p>案例参考文章<a href="[http://www.jianshu.com/p/40d8bc17529f](http://www.jianshu.com/p/40d8bc17529f">socket.io+express多房间聊天应用</a>))</p>
+<p>这个案例很容易了解socket.io的原理，帮助我更好地理解。</p>
+<p>原demo有些bug，比如在线用户昵称不显示（room.hbs）：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">// 监听系统消息</span><br><span class="line">      socket.on(&apos;sys&apos;, function (sysMsg, users) &#123;</span><br><span class="line">        var message = &apos;&lt;div class=&quot;sysMsg&quot;&gt;&apos; + sysMsg + &apos;&lt;/div&gt;&apos;;</span><br><span class="line">        $(&apos;#msglog&apos;).append(message);</span><br><span class="line"></span><br><span class="line">        $(&apos;#count&apos;).text(users.length);</span><br><span class="line">        $(&apos;#users&apos;).text(users);</span><br><span class="line">      &#125;);</span><br></pre></td></tr></table></figure>
+<p>原因是users打印出来其实是数组，并不能直接text显示在页面上，需要改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">var userArray= users.join(&quot;,&quot;);</span><br><span class="line"></span><br><span class="line"> $(&apos;#users&apos;).text(userArray);</span><br></pre></td></tr></table></figure>
+<p>另外css样式是直接写在room.hbs里的，不方便拓展，所以我把它提出来, 在public里新建css文件夹，style.css。</p>
+<p>room.hbs引用<code>&lt;link rel=&quot;stylesheet&quot; href=&quot;/css/style.css&quot;&gt;</code></p>
+<p>在app.js中说明引用静态资源目录：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">//静态资源目录</span><br><span class="line"></span><br><span class="line">app.use(express.static(&apos;public&apos;));</span><br></pre></td></tr></table></figure>
+<h2 id="socket-io事件"><a href="#socket-io事件" class="headerlink" title="socket.io事件"></a>socket.io事件</h2><p><a href="http://www.cnblogs.com/xiezhengcai/p/3956401.html" target="_blank" rel="noopener">socket中文手册</a></p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/socket/">socket</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

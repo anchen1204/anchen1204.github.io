@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>iView之后台运营系统 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="vue">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">iView之后台运营系统</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-04-05</span>
+  </div>
+  
+  <div class="post-content">
+    <p>前言：后台运营管理系统几乎是我这一年来一直在跟进的需求，因为随着产品线扩大，它本来由一个替补或者说增进的使用场景变成一个必不可缺的一部分。</p>
+<p>PS,去年回广州重新找工作，告别了待了两年的深圳。还记得当时来到现在这家公司时我没用过工作流，没在实际项目中使用自动化构建，没有在实际项目中使用除Jquery外的开发框架，也因为之前的项目单一即便公司背景不错但换工作的时候还是碰壁。入职前两个月项目组刚建不久，每天和一群后台/客户端小哥哥一起奋战，赶着发版，开始人生中第一次996，累但是很满足。新项目组只有我一个前端，对业务不熟悉时经常跑大部门另一个前端组取经，感谢他们对我的帮助，几乎一周上手。哈哈觉得我的适应能力和学习能力还是棒棒的，这也验证了一句话，实践是检验真理唯一标准，学习一样东西最好的方法是去使用它，恩。</p>
+<p>好了，不废话了。</p>
+<h3 id="iView"><a href="#iView" class="headerlink" title="iView"></a>iView</h3><p>iView是一套基于Vue.JS的高质量UI组件库，官网地址：<a href="https://www.iviewui.com/docs/guide/install" target="_blank" rel="noopener">任意门</a></p>
+<p>整个运营系统是以这套ui框架搭建，我觉得做完一个后台运营系统是基本符合开发需求，当然也不是说可以都照搬，一些特殊功能还是要结合产品需求做变更。</p>
+<p>由于基于Vue，所以IE兼容不是很好。所以我在入口index.js中做了IE判断提醒，我觉得这是必须的。</p>
+<p>项目基本结构：</p>
+<p><img src="/2018/04/05/使用iview-ui构建后台运营系统/1.png" alt=""></p>
+<ul>
+<li><p>css:不必多说，就是用来写自定义样式的</p>
+</li>
+<li><p>data:用来存放iview框架，包括css和js</p>
+</li>
+<li><p>html：通用，引入通用链接如JQuery等，配置title等,html代码只有一句  <code>&lt;div id = &quot;app&quot;&gt;&lt;/div&gt;</code>，到时vue渲染使用</p>
+</li>
+<li><p>js：基本开发都是在这里</p>
+<ul>
+<li><p>api：用来存储各个tab的接口请求</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> dataType = <span class="string">'json'</span>;</span><br><span class="line"><span class="keyword">var</span> timeout = <span class="number">15000</span>;</span><br><span class="line"><span class="keyword">var</span> url = <span class="string">'接口通用域名地址'</span>;</span><br><span class="line"><span class="keyword">var</span> request = <span class="function"><span class="keyword">function</span>(<span class="params">opt</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> $.ajax(&#123;</span><br><span class="line">		method: opt.method || <span class="string">'GET'</span>,</span><br><span class="line">		dataType: dataType,</span><br><span class="line">		timeout: timeout,</span><br><span class="line">		url: url + opt.url,</span><br><span class="line">		data: opt.data || <span class="literal">null</span></span><br><span class="line">	&#125;);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line"><span class="comment">//数据1</span></span><br><span class="line">data1:<span class="function"><span class="keyword">function</span>(<span class="params">data</span>)</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> request(&#123;</span><br><span class="line">			url: <span class="string">'接口详细地址'</span>,</span><br><span class="line">			data: data,</span><br><span class="line">		&#125;);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>common</p>
+<p><img src="/2018/04/05/使用iview-ui构建后台运营系统/2.png" alt=""></p>
+<p>api.js：这里其实跟上面的api文件夹作用一样，区别在于它全部写在了一个文件里，一开始是直接用的这个，后来随着项目的扩大及接口改版，觉得还是要根据功能单独提取出来比较好，这样也有利于团队一起维护；</p>
+<p>bus.js：这个不用多说，vue-router的中间组件</p>
+<p>routeList.js：这个是用来存储单页应用跳转地址</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> page1 = <span class="built_in">require</span>(<span class="string">'module/page1/main'</span>);</span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">   routes: [</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'/page1'</span>,</span><br><span class="line">      component: page</span><br><span class="line">    &#125;,</span><br><span class="line">    &#123;</span><br><span class="line">      path: <span class="string">'*'</span>,</span><br><span class="line">      redirect: <span class="string">'/home'</span></span><br><span class="line">    &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>tools.js:</p>
+<p>这个是用来区分权限和放一些公用的组件</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> GetMenus =<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    ...</span><br><span class="line">&#125;<span class="comment">//tab权限区分</span></span><br><span class="line"><span class="built_in">module</span>.exports = &#123;</span><br><span class="line">  GetMenus: GetMenus,</span><br><span class="line">  ...</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>以上4个文件各司其职，可以看为通用组件。</p>
+<p>然后接着看，lib文件夹是我用来放公共组件的，比如一些处理ajax的公共方法，vendor用来放第三方组件，比如vue-qrcode,用来显示二维码，这里是在支付这一块需要用到，比如微信支付。</p>
+<p>然后各个主要需求内容其实都是在module文件里。这里就是可以像平时写vue页面一样，在每个页面写好你的功能就可以。</p>
+<p>整个框架基本就是这样，蛮明朗的。vue+iviewUi，前端+后台的对接，就可以完成这套运营系统了。各个页面的信息基本独立，公共的部分提取出来，一些需要传递的信息可以使用busEvents，无需引用vuex，其次ajax、功能模块单独区分，后期维护和其他人接手的话基本无成本，查找也方便。其他的使用在iview官网都可以找到解决办法，然后接下来介绍下其他特别的地方。</p>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h3><p>在使用iView有没有遇到问题，当然有…有些是踩到的小坑，有些是iview满足不了你的需求，你要自己解决。</p>
+<ul>
+<li><p><code>&lt;Time-picker format=&quot;HH:mm&quot; type=&quot;timerange&quot; v-model=&quot;timeInterval&quot;  placeholder=&quot;推荐时间段&quot; style=&quot;width: 400px;&quot;&gt;&lt;/Time-picker&gt;</code></p>
+<p>当timeInterval定义为字符串<code>timeInterval:&#39;&#39;</code>会把页面搞崩，因为动态监听的值类型问题，必须为数组。</p>
+</li>
+<li><p>二级联动</p>
+<p>iView里有二级联动的组件<code>cascader</code>,但是是在一个选择框进行分级，我的需求是父子选择框是独立的选择框，所以仍然用到<code>select</code></p>
+<p>所以这里要自己处理逻辑：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">computed: &#123;</span><br><span class="line">    self: <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">this</span>;</span><br><span class="line">    &#125;,</span><br><span class="line">   <span class="comment">//第二个选择框</span></span><br><span class="line">      levels:<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> levels =[],selectedDepart = <span class="keyword">this</span>.$data.category_id;   </span><br><span class="line">        <span class="keyword">this</span>.$data.categorys.forEach(<span class="function"><span class="keyword">function</span>(<span class="params">d</span>)</span>&#123;</span><br><span class="line">          <span class="keyword">if</span>(d.id == selectedDepart)&#123;</span><br><span class="line">            levels = d.levels; </span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">        <span class="keyword">return</span> levels;</span><br><span class="line">      &#125;,</span><br><span class="line">  &#125;,</span><br></pre></td></tr></table></figure>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">  <span class="comment">&lt;!--父选择框--&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">Form-item</span> <span class="attr">label</span>=<span class="string">"选择品类"</span> <span class="attr">prop</span>=<span class="string">"coefficient"</span>&gt;</span></span><br><span class="line">		 <span class="tag">&lt;<span class="name">Select</span> <span class="attr">v-model</span>=<span class="string">"category_id"</span> <span class="attr">style</span>=<span class="string">"width:350px"</span>&gt;</span></span><br><span class="line">			<span class="tag">&lt;<span class="name">Option</span> <span class="attr">v-for</span>=<span class="string">"item in categorys"</span> <span class="attr">:value</span>=<span class="string">"item.id"</span> <span class="attr">:key</span>=<span class="string">"item.id"</span>&gt;</span>		&#123;&#123;item.category_name&#125;&#125;<span class="tag">&lt;/<span class="name">Option</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;/<span class="name">Select</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">Form-item</span>&gt;</span> </span><br><span class="line"><span class="comment">&lt;!--子选择框--&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Form-item</span> <span class="attr">label</span>=<span class="string">"段位"</span>&gt;</span></span><br><span class="line">		<span class="tag">&lt;<span class="name">Select</span> <span class="attr">v-model</span>=<span class="string">"level1"</span> <span class="attr">style</span>=<span class="string">"width:350px"</span>&gt;</span></span><br><span class="line">			 <span class="tag">&lt;<span class="name">Option</span> <span class="attr">v-for</span>=<span class="string">"item in levels"</span> <span class="attr">:value</span>=<span class="string">"item.level"</span> <span class="attr">:key</span>=<span class="string">"item"</span>&gt;</span>&#123;&#123;item.name&#125;&#125;<span class="tag">&lt;/<span class="name">Option</span>&gt;</span>  </span><br><span class="line">		<span class="tag">&lt;/<span class="name">Select</span>&gt;</span></span><br><span class="line">   <span class="tag">&lt;/<span class="name">Form-item</span>&gt;</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>待续…</p>
+<p>​</p>
+</li>
+</ul>
+<p>​    其实在项目中会遇到各种情况，比如你获取到的数据跟呈现在页面的数据可能是两种形式，中间的处理当然是需要自己写，框架拯救不了你。还有一些东西是可以利用框架来进行拓展，比如<code>Modal</code>弹框你可以用来做查看图片，具体情况具体分析。因为我没使用过elementUI，所以我也不知道具体的区别在哪里，简单看文档的话感觉是很相似的。无论是用iView还是其他，这些说到底都是一种辅助作用，简洁开发流程和优化呈现方式，作为前端<strong>应该就算它们提供不了功能也要能自己写出来</strong>，不能以框架没有做到为借口。打个很简单的比方，<code>Checkbox</code>可以用于多选，它也提供了一个全选的功能，那如果没有提供的话，我们也应该自己能写得出。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">i-form</span> <span class="attr">inline</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">Form-item</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">Checkbox</span> <span class="attr">style</span>=<span class="string">"margin-left: 10px;"</span> <span class="attr">v-model</span>=<span class="string">"selectAll"</span>  <span class="attr">v-if</span>=<span class="string">"ifselectAll"</span>&gt;</span>本页全选<span class="tag">&lt;/<span class="name">Checkbox</span>&gt;</span></span><br><span class="line">        <span class="tag">&lt;<span class="name">p</span> <span class="attr">style</span>=<span class="string">"margin-left: 10px;"</span> <span class="attr">v-else</span>&gt;</span>已选择&#123;&#123;muchcount&#125;&#125;位<span class="tag">&lt;/<span class="name">p</span>&gt;</span></span><br><span class="line">     <span class="tag">&lt;/<span class="name">Form-item</span>&gt;</span>    </span><br><span class="line"> <span class="tag">&lt;/<span class="name">i-form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">data: <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">   <span class="keyword">return</span> &#123;</span><br><span class="line">     self: <span class="keyword">this</span>,</span><br><span class="line">     columns: [&#123;</span><br><span class="line">         title: <span class="string">'选择'</span>,</span><br><span class="line">         key: <span class="string">'choose'</span>,</span><br><span class="line">         width: <span class="number">50</span>,</span><br><span class="line">         render: <span class="function"><span class="keyword">function</span> (<span class="params">row, columns, index</span>) </span>&#123;</span><br><span class="line">           <span class="keyword">return</span> <span class="string">'&lt;Checkbox  disabled v-model="self.muchids.num'</span> + index + <span class="string">'"   @on-change="ifchange('</span> + row.id + <span class="string">')" v-if="self.selectAll"&gt;&lt;/Checkbox&gt;&lt;Checkbox  v-model="self.muchids.num'</span> + index + <span class="string">'"   @on-change="ifchange('</span> + row.id + <span class="string">')" v-else&gt;&lt;/Checkbox&gt;'</span></span><br><span class="line">         &#125;</span><br><span class="line">       &#125;,</span><br><span class="line">   ]&#125;,</span><br><span class="line">   ...</span><br><span class="line">   ...</span><br><span class="line">   methods:&#123;</span><br><span class="line">       <span class="comment">//多选选择判断</span></span><br><span class="line">   ifchange: <span class="function"><span class="keyword">function</span> (<span class="params">id</span>) </span>&#123;</span><br><span class="line">     <span class="keyword">var</span> self = <span class="keyword">this</span>;</span><br><span class="line">     <span class="keyword">var</span> index = self.muchList.indexOf(id)</span><br><span class="line">     <span class="built_in">console</span>.log(index)</span><br><span class="line">     <span class="keyword">if</span> (index != <span class="number">-1</span>) &#123;</span><br><span class="line">       self.muchList.splice(index, <span class="number">1</span>)</span><br><span class="line">     &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">       self.muchList.push(id);</span><br><span class="line"></span><br><span class="line">     &#125;</span><br><span class="line">     self.ifselectAll = self.muchList.length ? <span class="literal">false</span> : <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">     self.muchcount = self.muchList.length;</span><br><span class="line">     <span class="built_in">console</span>.log(self.muchList)</span><br><span class="line"></span><br><span class="line">   &#125;,</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+<p>这样我就自己写出了一个全选的功能：</p>
+<p><img src="/2018/04/05/使用iview-ui构建后台运营系统/3.png" alt=""></p>
+<p><img src="/2018/04/05/使用iview-ui构建后台运营系统/4.png" alt=""></p>
+<p>以上只是个栗子，建议可以直接用<code>checkbox</code>即可。框架和工具是为了辅助我们更好的开发，而不是去限制我们开发，这是我在这个过程中意识到的最大的收获。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/vue/">vue</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

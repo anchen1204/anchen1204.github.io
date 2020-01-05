@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>一分钟学会ajax调用 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="ajax">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">一分钟学会ajax调用</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-02-12</span>
+  </div>
+  
+  <div class="post-content">
+    <p>怎么写ajax，之前也不是很懂，后来在项目中接触几次后也就差不多了。</p>
+<p>首先来个场景，有一个页面的价格需要调用ajax的接口来拉取，拉取的原理是，每个商品的商品id发给后台对应拉到每个商品的价格然后填写。</p>
+<p>于是我定义了一个Prize的函数：function Prize() {}。</p>
+<p><strong>然后首先第一步，取到每个商品的id并且拼在一起一次性请求：</strong>（这个怎么拼看ajax的发送规则，比如这个例子是商品id,使用”,”分割）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> _value = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">		<span class="keyword">var</span> selector = $(<span class="string">'.list li'</span>);</span><br><span class="line"></span><br><span class="line">		selector.each(<span class="function"><span class="keyword">function</span>(<span class="params">_idx</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">			<span class="keyword">if</span> (_idx == <span class="number">0</span>) &#123;</span><br><span class="line"></span><br><span class="line">				_value = $(<span class="keyword">this</span>).attr(<span class="string">'skuid'</span>);</span><br><span class="line"></span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">				_value = _value + <span class="string">','</span> + $(<span class="keyword">this</span>).attr(<span class="string">'skuid'</span>);</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">			value = $.trim(value);</span><br><span class="line"></span><br><span class="line">		&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>第二步就是发送ajax请求并返回得到的价格：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line"></span><br><span class="line">			type: <span class="string">'GET'</span>,</span><br><span class="line"></span><br><span class="line">			url: <span class="string">'ajax地址'</span>,</span><br><span class="line"></span><br><span class="line">			data: &#123;</span><br><span class="line"></span><br><span class="line">				<span class="string">'skuIds'</span>: _value</span><br><span class="line"></span><br><span class="line">			&#125;,</span><br><span class="line"></span><br><span class="line">			dataType: <span class="string">'jsonp'</span>,</span><br><span class="line"></span><br><span class="line">			success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">				<span class="built_in">console</span>.log(data)</span><br><span class="line"></span><br><span class="line">				</span><br><span class="line"></span><br><span class="line">			&#125;</span><br><span class="line"></span><br><span class="line">		&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>第三步就是请求成功后对页面的输出，success里的函数就是写成功后要做的事：</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">success: <span class="function"><span class="keyword">function</span>(<span class="params">data</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">				<span class="built_in">console</span>.log(data)</span><br><span class="line"></span><br><span class="line">				selector.each(<span class="function"><span class="keyword">function</span>(<span class="params">_index</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">					<span class="keyword">var</span> sku = .trim((<span class="keyword">this</span>).attr(<span class="string">'skuid'</span>));</span><br><span class="line"></span><br><span class="line">					<span class="keyword">for</span> (<span class="keyword">var</span> i = <span class="number">0</span>; i &lt; data.data.length; i++) &#123;</span><br><span class="line"> <span class="comment">//for循环是遍历每一个商品id，然后if语句中要多一步验证返回的商品id和当前的id是不是同一个，如果是则写入价格， data.data[i].Price的Prize是因为返回字段的定义，有Prize字段存储，具体看ajax返回的内容进行程序编写。</span></span><br><span class="line"></span><br><span class="line">						<span class="keyword">var</span> eachData = data.data[i];</span><br><span class="line"></span><br><span class="line">						<span class="keyword">var</span> eachprice = data.data[i].Price;</span><br><span class="line"></span><br><span class="line">						<span class="keyword">if</span> (sku == eachData.skuId) &#123;</span><br><span class="line"></span><br><span class="line">							(<span class="keyword">this</span>).find(<span class="string">'.price  .price-cur'</span>).html(<span class="string">""</span> + eachprice);</span><br><span class="line"></span><br><span class="line">						&#125;</span><br><span class="line"></span><br><span class="line">					&#125;</span><br><span class="line"></span><br><span class="line">				&#125;)</span><br><span class="line"></span><br><span class="line">			&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="顺便说下each方法和-each-函数，我最喜欢用例子来理解了："><a href="#顺便说下each方法和-each-函数，我最喜欢用例子来理解了：" class="headerlink" title="顺便说下each方法和$.each()函数，我最喜欢用例子来理解了："></a>顺便说下each方法和$.each()函数，我最喜欢用例子来理解了：</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$(<span class="string">'.tag'</span>).each(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>($(item).find(<span class="string">'span'</span>).text()!=<span class="string">''</span>)&#123;</span><br><span class="line">        $(item).show()<span class="string">'</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">&#125;)</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$.each($(<span class="string">'.tag-discount'</span>),<span class="function"><span class="keyword">function</span>(<span class="params">index,item</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">if</span>($(item).find()<span class="string">'span'</span>.text()!=<span class="string">''</span>)&#123;</span><br><span class="line">        $(item).show();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p>这两个的效果一样，但是$.each()函数不同于JQuery对象的each()方法，它是一个全局函数，不操作JQuery对象，把对象作为第一个参数，以一个回调函数作为第二个参数：第一个为对象成员或者数组索引，第二个为对应变量或者内容。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/ajax/">ajax</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

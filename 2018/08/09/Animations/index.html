@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Animations(web动画归纳篇) - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="web">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Animations(web动画归纳篇)</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-08-09</span>
+  </div>
+  
+  <div class="post-content">
+    <h2 id="web动画形式"><a href="#web动画形式" class="headerlink" title="web动画形式"></a>web动画形式</h2><p><strong>经常使用的场景：</strong></p>
+<ul>
+<li><p>css3动画</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.box</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-transform</span>: <span class="built_in">translate</span>(0, 0);</span><br><span class="line">  <span class="attribute">-webkit-transition</span>: -webkit-transform <span class="number">500ms</span>;</span><br><span class="line"></span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(0, 0);</span><br><span class="line">  <span class="attribute">transition</span>: transform <span class="number">500ms</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.box</span><span class="selector-class">.move</span> &#123;</span><br><span class="line">  <span class="attribute">-webkit-transform</span>: <span class="built_in">translate</span>(100px, 100px);</span><br><span class="line">  <span class="attribute">transform</span>: <span class="built_in">translate</span>(100px, 100px);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>js控制样式:使用 JavaScript 来管理状态，只需在目标元素上设置相应的类，让浏览器去处理动画</p>
+<p><code>box.classList.add(&#39;move&#39;)；</code></p>
+</li>
+<li><p>这种方法可以侦听元素的 <code>transitionend</code> 事件,兼容IE10</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> box = <span class="built_in">document</span>.querySelector(<span class="string">'.box'</span>);</span><br><span class="line">box.addEventListener(<span class="string">'transitionend'</span>, onTransitionEnd, <span class="literal">false</span>);</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">onTransitionEnd</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="comment">// Handle the transition finishing.</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h3 id="1-CSS3动画"><a href="#1-CSS3动画" class="headerlink" title="1. CSS3动画"></a>1. CSS3动画</h3><p>略</p>
+<h3 id="2-使用-JavaScript-编写动画"><a href="#2-使用-JavaScript-编写动画" class="headerlink" title="2. 使用 JavaScript 编写动画"></a>2. 使用 JavaScript 编写动画</h3><p>为什么要使用javaScript动画，因为js动画可以完全控制元素在每个步骤的样式。这意味着您可以在您认为合适时减慢动画、暂停动画、停止动画、倒退动画和操纵元素。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> target = <span class="built_in">document</span>.querySelector(<span class="string">'.box'</span>);</span><br><span class="line"><span class="keyword">var</span> player = target.animate([</span><br><span class="line">  &#123;<span class="attr">transform</span>: <span class="string">'translate(0)'</span>&#125;,</span><br><span class="line">  &#123;<span class="attr">transform</span>: <span class="string">'translate(100px, 100px)'</span>&#125;</span><br><span class="line">], <span class="number">500</span>);</span><br><span class="line">player.addEventListener(<span class="string">'finish'</span>, <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">  target.style.transform = <span class="string">'translate(100px, 100px)'</span>;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<h3 id="3-HTML5新增的定时器requestAnimationFrame"><a href="#3-HTML5新增的定时器requestAnimationFrame" class="headerlink" title="3. HTML5新增的定时器requestAnimationFrame"></a>3. HTML5新增的定时器requestAnimationFrame</h3><p>setTimeout和setInterval的问题是，它们都不精确。它们的内在<a href="http://www.cnblogs.com/xiaohuochai/p/5773183.html#anchor3" target="_blank" rel="noopener">运行机制</a>决定了时间间隔参数实际上只是指定了把动画代码添加到浏览器UI线程队列中以等待执行的时间。如果队列前面已经加入了其他任务，那动画代码就要等前面的任务完成后再执行。</p>
+<p>requestAnimationFrame采用系统时间间隔，保持最佳绘制效率，不会因为间隔时间过短，造成过度绘制，增加开销；也不会因为间隔时间太长，使用动画卡顿不流畅，让各种网页动画效果能够有一个统一的刷新机制，从而节省系统资源，提高系统性能，改善视觉效果.</p>
+<p>总而言之，requestAnimationFrame相当于是把动画交给浏览器去执行，浏览器会基于当前页面情况来自行决定最佳的帧速率，从而更合理地使用CPU。</p>
+<p>它兼容Android4.4及以上，IE10及以上，兼容性其实跟css3动画差不多，所以可能要根据需求配合setTimeout做降级处理。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(!<span class="built_in">window</span>.requestAnimationFrame)&#123;</span><br><span class="line">    <span class="keyword">var</span> lastTime = <span class="number">0</span>;</span><br><span class="line">    <span class="built_in">window</span>.requestAnimationFrame = <span class="function"><span class="keyword">function</span>(<span class="params">callback</span>)</span>&#123;</span><br><span class="line">        <span class="keyword">var</span> currTime = <span class="keyword">new</span> <span class="built_in">Date</span>().getTime();</span><br><span class="line">        <span class="keyword">var</span> timeToCall = <span class="built_in">Math</span>.max(<span class="number">0</span>,<span class="number">16.7</span>-(currTime - lastTime));</span><br><span class="line">        <span class="keyword">var</span> id  = <span class="built_in">window</span>.setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            callback(currTime + timeToCall);</span><br><span class="line">        &#125;,timeToCall);</span><br><span class="line">        lastTime = currTime + timeToCall;</span><br><span class="line">        <span class="keyword">return</span> id;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!<span class="built_in">window</span>.cancelAnimationFrame) &#123;</span><br><span class="line">    <span class="built_in">window</span>.cancelAnimationFrame = <span class="function"><span class="keyword">function</span>(<span class="params">id</span>) </span>&#123;</span><br><span class="line">        clearTimeout(id);</span><br><span class="line">    &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>所以综上，我们可以在使用setTimeout的地方做动画时也使用这个新的定时器做优化。</p>
+<h3 id="4-Web-Animations-API"><a href="#4-Web-Animations-API" class="headerlink" title="4. Web Animations API"></a>4. Web Animations API</h3><p>WAAPI是JavaScript 原生提供的的动画操作 API。</p>
+<p>文章：</p>
+<p><a href="https://www.zcfy.cc/article/css-animations-vs-web-animations-api-css-tricks-3306.html" target="_blank" rel="noopener">CSS Animations vs Web Animations API</a></p>
+<ul>
+<li><p>兼容性：Dan Wilson(<a href="https://codepen.io/danwilson" target="_blank" rel="noopener">@danvilson</a>) 写的<a href="https://codepen.io/danwilson/pen/xGBKVq/" target="_blank" rel="noopener">WAAPI 浏览器兼容测试</a>页面，目前只有极少部分的浏览器支持，但是 WAAPI 有完善的 <a href="https://github.com/web-animations/web-animations-js/tree/master" target="_blank" rel="noopener">Polyfill</a> 方案。</p>
+</li>
+<li><p>WAAPI的基础方法和jQuery的.animate()方法类似</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> element = <span class="built_in">document</span>.querySelector(<span class="string">'.animate-me'</span>);</span><br><span class="line">element.animate(keyframes, <span class="number">1000</span>);</span><br></pre></td></tr></table></figure>
+<p><code>animate</code> 方法接受两个参数：关键帧和持续时间。与jQuery不同的是，它不仅具有浏览器原生支持等优点，而且还具有更高的性能。</p>
+<p>第一个参数关键帧必须是一个数组对象。每一个对象是一个动画关键帧。下面是一个简单的示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> keyframes = [</span><br><span class="line">  &#123; <span class="attr">opacity</span>: <span class="number">0</span> &#125;,</span><br><span class="line">  &#123; <span class="attr">opacity</span>: <span class="number">1</span> &#125;</span><br><span class="line">];</span><br></pre></td></tr></table></figure>
+<p>​</p>
+</li>
+</ul>
+<h2 id="动画与性能"><a href="#动画与性能" class="headerlink" title="动画与性能"></a>动画与性能</h2><p><a href="https://www.html5rocks.com/zh/tutorials/speed/high-performance-animations/" target="_blank" rel="noopener">High Performance Animations</a></p>
+<ul>
+<li><p>注意动画不能导致性能问题</p>
+<p>eg：</p>
+<blockquote>
+<p>给元素的 <code>width</code> 和 <code>height</code> 设置动画会改变其几何形状，并且可能导致页面上的其他元素移动或改变大小。此过程称为<em>布局</em>（在 Firefox 等基于 Gecko 的浏览器中称为<em>自动重排</em>），如果页面有很多元素，则可能开销很大。每当触发布局时，页面或其一部分通常需要进行绘制，这一般比布局操作本身更消耗资源。</p>
+<p>应尽可能避免给触发布局或绘制的属性设置动画。对于大部分现代浏览器，这意味着将动画限制为 <code>opacity</code> 或 <code>transform</code>，两种都可经浏览器高度优化；动画是由 JavaScript 还是由 CSS 处理并不重要。</p>
+</blockquote>
+<p>​</p>
+<p><img src="https://www.html5rocks.com/zh/tutorials/speed/high-performance-animations/cheap-operations.jpg" alt=""></p>
+<blockquote>
+<p>Chrome, Firefox, Safari 和 Opera 都对 transforms 和 opacity进行硬件加速。不幸的是，对于Internet Explorer 10+ 开启硬件加速的条件不是很明确，但值得庆幸的是当F12工具加入到IE11中的时候，这一点将变得清晰。</p>
+<p>在Blink和WebKit内核的浏览器中，对于在CSS的transition或者animation中有opacity的改变的元素，将会为其创建一个图层。但也有很多开发者使用<code>translateZ(0)</code>或者<code>translate3d(0,0,0)</code>来人为地强制性地创建一个图层(硬件加速)。然而，需要有节制地增加图层；如果过分的增加图层，那么将会导致<a href="http://wesleyhales.com/blog/2013/10/26/Jank-Busting-Apples-Home-Page/" target="_blank" rel="noopener">闪烁</a>。</p>
+<p>一个元素的变换，归结为改变它的位置，旋转角度和缩放。通常，位置的改变是使用<code>left</code>和<code>top</code>属性来改变的。问题是，如前面所述，<code>left</code>和<code>top</code>都会引起图层的变化，并且它的代价是昂贵的。更好的解决方案是使用不会引起图层变化的<code>translate</code>属性。</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="CSS-对比-JavaScript-的性能"><a href="#CSS-对比-JavaScript-的性能" class="headerlink" title="CSS 对比 JavaScript 的性能"></a>CSS 对比 JavaScript 的性能</h3><p><strong>命令式动画(JavaScript)vs说明式动画(css)</strong></p>
+<ul>
+<li><p>JavaScript动画：</p>
+<p>它在浏览器主进程的JavaScript中运行。主进程已经忙于运行其他的JavaScript，样式的计算，布局还有绘制。所以进程内存在这资源竞争。这实质上增加了掉帧的风险，可能这一帧是你认为最重要的帧。</p>
+</li>
+<li><p>CSS动画</p>
+<p>作为替代的方案，你可以用CSS来实现你的渐变和动画。最主要的好处就是，浏览器会对动画进行优化。如果有需要，它会创建图层。并且可以在主进程之外完成一些操作。这意味着，如果浏览器正在主线程上运行一些高开销任务，则这些动画可以继续运行而不中断。它最主要的缺点就是CSS动画相对于Javascript动画而言，缺乏表现力。并且很难有意义地组织动画，这意味着创造动画会带来较高的复杂度和错误率。</p>
+</li>
+<li><p>如果任何动画触发绘制、布局或同时触发这两者，则“主线程”将必须执行工作。这点同时适用于基于 CSS 和 JavaScript 的动画，并且布局或绘制的开销可能拖慢与 CSS 或 JavaScript 执行相关的任何工作，使问题变得无意义。</p>
+</li>
+</ul>
+<p><strong>总结：</strong></p>
+<p><strong>JavaScript动画对比CSS动画：</strong></p>
+<p>缺点：</p>
+<ol>
+<li>JavaScript在浏览器的主线程中运行,而主线程中还有其它需要运行的JavaScript脚本、样式计算、布局、绘制任务等,对其干扰导致线程可能出现阻塞,从而造成丢帧的情况。</li>
+<li>代码的复杂度高于CSS动画</li>
+</ol>
+<p>优点：</p>
+<ol>
+<li>js动画控制能力强，可以完全控制元素在每个步骤的样式，如减慢动画、暂停动画、停止动画、倒退动画和操纵元素。</li>
+<li>动画效果比css3动画丰富,有些动画效果,比如曲线运动,冲击闪烁,视差滚动效果,只有JavaScript动画才能完成</li>
+<li>JS大多时候没有兼容性问题</li>
+</ol>
+<p><strong>CSS动画对比JavaScript动画</strong></p>
+<p>缺点：</p>
+<ol>
+<li>CSS动画只能暂停,不能在动画中寻找一个特定的时间点,不能在半路反转动画,不能变换时间尺度,不能在特定的位置添加回调函数或是绑定回放事件,无进度报告</li>
+<li>实现复杂动画代码冗长</li>
+</ol>
+<p>优点：</p>
+<ol>
+<li><p>浏览器可以对动画进行优化。</p>
+<p>浏览器使用与 requestAnimationFrame 类似的机制,requestAnimationFrame比起setTimeout,setInterval设置动画的优势主要是:</p>
+<p>1) requestAnimationFrame 会把每一帧中的所有DOM操作集中起来,在一次重绘或回流中就完成,并且重绘或回流的时间间隔紧紧跟随浏览器的刷新频率,一般来说,这个频率为每秒60帧。</p>
+<p>2) 在隐藏或不可见的元素中requestAnimationFrame不会进行重绘或回流,这当然就意味着更少的的cpu,gpu和内存使用量。</p>
+</li>
+<li><p>强制使用硬件加速 (通过 GPU 来提高动画性能)</p>
+<p>渲染线程分为main thread(主线程)和compositor thread(合成器线程)。如果CSS动画只是改变transform和opacity,这时整个CSS动画得以在compositor thread完成(而JS动画则会在main thread执行,然后触发compositor进行下一步操作)在JS执行一些昂贵的任务时,main thread繁忙,CSS动画由于使用了compositor thread可以保持流畅,</p>
+</li>
+<li><p>代码相对简单,性能调优方向固定</p>
+</li>
+</ol>
+<p><em>在CSS动画或JS动画触发了paint或layout时,需要main thread进行Layer树的重计算,这时CSS动画或JS动画都会阻塞后续操作，所以只有用上了3D硬件加速或修改opacity时,css3动画的优势才会体现出来。</em></p>
+<p>了解一个属性（由于支持度不高，暂不运用到项目）：<a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS/will-change" target="_blank" rel="noopener">will-change</a>：为web开发者提供了一种告知浏览器该元素会有哪些变化的方法，这样浏览器可以在元素属性真正发生变化之前提前做好对应的优化准备工作。 这种优化可以将一部分复杂的计算工作提前准备好，使页面的反应更为快速灵敏。</p>
+<p><a href="https://caniuse.com/#search=will-change" target="_blank" rel="noopener">兼容性</a>:IE不支持（含IE11），Android 4.4.4（含）以下不支持，ios9.2（含）以下不支持</p>
+<p>其他参考文章：</p>
+<p>  <a href="https://developers.google.com/web/fundamentals/design-and-ux/animations/css-vs-javascript?hl=zh-cn" target="_blank" rel="noopener">CSS 对比 JavaScript 动画</a></p>
+<p><a href="https://www.cnblogs.com/xiaohuochai/p/5777186.html" target="_blank" rel="noopener">深入理解定时器系列第二篇——被誉为神器的requestAnimationFrame</a></p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/web/">web</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

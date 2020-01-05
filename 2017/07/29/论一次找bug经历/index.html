@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>论一次找bug经历 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="生活,博客,前端">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">论一次找bug经历</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2017-07-29</span>
+  </div>
+  
+  <div class="post-content">
+    <h4 id="某日故障反馈群报某页面极个别用户无法获取数据，遂查。"><a href="#某日故障反馈群报某页面极个别用户无法获取数据，遂查。" class="headerlink" title="某日故障反馈群报某页面极个别用户无法获取数据，遂查。"></a>某日故障反馈群报某页面极个别用户无法获取数据，遂查。</h4><p>network返回<strong>Provisional headers are shown</strong></p>
+<p><img src="/2017/07/29/论一次找bug经历/p1.jpg" alt="p1"></p>
+<p>查看发现</p>
+<p><img src="/2017/07/29/论一次找bug经历/@p2.jpg" alt="p2"></p>
+<p>就是说根本没有拿到接口返回的数据，甚至根本可能没有发成功。</p>
+<p>网上查都推荐看chrome://net-internals，那就来看下吧。</p>
+<p>老实说一堆东西我看的也是半知不解，但是有几行觉得是关键：</p>
+<p><img src="/2017/07/29/论一次找bug经历/p3.png" alt="p3"></p>
+<p>可见发送头部是成功的，问题出在解析那里，read headers时间太长，直接导致cancelled，也就是说，是服务器相应太慢导致异常，那跟我前端应该没啥关系吧。</p>
+<p>继续回到页面，15s后取消请求，为什么是15s，因为我的ajax的timeout超时设置了15s，把这个时间延长至5分钟，再看下原因。这次发现后端在2分钟后给我返回504，跟上面的解释对的上了。</p>
+<p>后面就是告知后端同学查原因，后端反馈是这个用户名下列表数据量过大，导致查询过慢，直接超时，后面做了优化，已正常使用。</p>
+<p>导致Provisional headers are shown其实原因可能多样，比如插件比如被某些扩展如 Adblock 给拦截比如被墙，还是要具体情况具体分析。</p>
+
+  </div>
+  <div class="post-footer">
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>关于web渲染及硬件加速 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="生活,博客,前端">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">关于web渲染及硬件加速</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-08-31</span>
+  </div>
+  
+  <div class="post-content">
+    <h3 id="关于web渲染性能，本文将分为循序渐进的几个部分进行总结概括。"><a href="#关于web渲染性能，本文将分为循序渐进的几个部分进行总结概括。" class="headerlink" title="关于web渲染性能，本文将分为循序渐进的几个部分进行总结概括。"></a>关于web渲染性能，本文将分为循序渐进的几个部分进行总结概括。</h3><p><strong>一.页面在浏览器上是怎么渲染的(以普通静态页面为例）</strong></p>
+<p>浏览器首先获取html页面-&gt;分析这个页面（标签/属性/节点)-&gt;Dom结构-&gt;解析css-&gt;css+Dom每个节点的位置和大小等几何信息（layout)-&gt;css paint（绘制成位图）-&gt;传输到GPU渲染到屏幕（composited)。</p>
+<p>reflow一步发生于layout，repaint是对应css paint这个步骤。</p>
+<p>所以，在解析css开始的步骤，修改的css元素是在越前的步骤解析的话会越耗性能，因为它及其它后面的步骤将会被重新修改一遍。</p>
+<p>换句话来说，Dom操作触发频繁reflow（layout）和repaint，layout发生在repaint之前，相对会造成更多性能损坏。</p>
+<p>那么，哪些元素会影响layout、paint和composited？</p>
+<p>举些我们很常用的例子：</p>
+<p>影响layout：</p>
+<p>margin/padding/width/height/display/border/top/left/right/bottom/position/font-size/text-align/line-height/font-weight/font-family/overflow…</p>
+<p>影响repaint：</p>
+<p>color/border-style/visibility/backgrounf/text-decoration/border-radius/outline/box-shadow/backgrounf-size…</p>
+<p>注意：</p>
+<p>【设置动画元素为absolute或fixed：</p>
+<ul>
+<li>position:static或position:relative元素应用动画效果会造成频繁的reflow。</li>
+<li>position:absolute或position:fixed的元素应用动画效果只需要repaint.】</li>
+</ul>
+<p>关于以上括号内，出处应该是国外翻译为中文，很多文章都这么写，但经过测试和与朋友的讨论，发现这么说好像有问题。</p>
+<p>如下为relative的渲染：</p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/relative.png" alt="png1"></p>
+<p>如下为absolute的渲染:</p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/absolute.png" alt="png"></p>
+<p>私以为，position:static或position:relative元素应用动画效果和position:absolute或position:fixed的元素应用动画效果都会造成它自己的元素触发这三个阶段，只是position:static或position:relative元素应用动画效果会造成文本流的其他元素reflow，而position:absolute或position:fixed的元素应用动画效果只会造成文本流其他元素repaint。</p>
+<p>具体可看<a href="http://csstriggers.com/" target="_blank" rel="noopener">css查询</a></p>
+<p><strong>二.硬件加速——把GPU利用起来</strong></p>
+<p>GPU（图形处理器），是专为执行复杂的数学和几何计算而设计的，这些计算是图形渲染所必需的。通常CPU是双核四核，而GPU是上百成千，所以它的并发计算能力越强。偏移、放大缩小、旋转等这些操作都是矩阵变换，交给GPU完成，就会越快完成。</p>
+<p>在GPU的众多特性之中，它可以存储一定数量的纹理（一个矩形的像素点集合）并且高效地操作这些纹理（比如进行特定的移动、缩放和旋转操作）。这些特性在实现一个<a href="http://ariya.ofilabs.com/2013/06/optimizing-css3-for-gpu-compositing.html" target="_blank" rel="noopener">流畅的动画</a>时特别有用。浏览器不会在动画的每一帧都绘制一次，而是生成DOM元素的快照，并作为GPU纹理（也被叫做层）存储起来。之后浏览器只需要告诉GPU去转换指定的纹理来实现DOM元素的动画效果。</p>
+<p>而浏览器在进行硬件加速时，是根据css属性为元素生成layers，将layers作为texture从CPU上传到GPU，当改变layer的transform、opacity等属性时，渲染会跳过layout、paint这些步骤，直接通知layer做变换，即通过硬件加速，浏览器将需要硬件加速的元素放在一个新的复合层（composited layer）中渲染，跟主文档不是一个层中，所以可以跳过一些步骤加速生成位图绘制。</p>
+<p>综上，简单总结就是，使用硬件加速一是可以减少CPU向GPU传输位图的时间，因为它只需绘制一次就作为GPU纹理存储起来；二是减少CPU进行layout和paint的时间。</p>
+<p>现在，像Chrome, FireFox, Safari, IE9+和最新版本的Opera都支持硬件加速，当它们检测到页面中某个DOM元素应用了某些CSS规则时就会开启，最显著的特征的元素的3D变换。我们可以设置translate3d的值来告诉浏览器，另外，现在也可以使用will-change这个属性，它会告诉浏览器哪个属性未来即将改变，让浏览器自己来做优化。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">.animate&#123;</span><br><span class="line"></span><br><span class="line">    will-change:transform,opacity</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>除此之外，凡可以创建复合层（composited layer）规则的元素都可以开启硬件加速，列举如下：</p>
+<ul>
+<li><p>3D或透视变换的css属性（animation，transition师兄opacity，transform动画）</p>
+</li>
+<li><p>使用加速视频解码的元素</p>
+</li>
+<li><p>canvas</p>
+</li>
+<li><p>使用css filters的元素</p>
+</li>
+<li><p>元素有一个包含复合层的后代节点，那么此元素也将创建复合层</p>
+</li>
+<li><p>元素有一个z-index较低且包含一个复合层的兄弟元素（即该元素在复合层上面渲染）</p>
+</li>
+</ul>
+<p><strong>三.硬件加速的探讨</strong></p>
+<p>首先我们怎么查看一个页面是否启用了硬件加速，其实很简单。以chrome为例：</p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/QQ图片20150922112444.jpg" alt="jpg1"></p>
+<p>可以看到页面蓝色框被分成一块一块，实际为浏览器渲染的位图，它绘制页面时只会绘制可视区域一定范围内的东西，而如果有黄色的框，则代表这个元素被放到特殊的复合层中渲染，即启用了GPU。</p>
+<p>那么通过这个方式我们了解到复合层的数量，这是有意义的，因为连接CPU和GPU的总线带宽不是无限的，需要关注数据在CPU和GPU之间的传输，避免通道拥挤。所以回答第二点的最后一个问题，当页面上太多元素使用到3硬件加速时，反而会阻碍页面的加载，造成“卡顿”的现象。</p>
+<p>在上面我们讨论到了创建复合层开启硬件加速的规则，最后两点（元素有一个包含复合层的后代节点，那么此元素也将创建复合层</p>
+<p>以及元素有一个z-index较低且包含一个复合层的兄弟元素（即该元素在复合层上面渲染））其实往往会被忽略，造成许多不必要的元素也使用3d加速，比如下图：</p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/QQ图片20150922151018.png" alt="jpg2"> </p>
+<p>这是我访问某一个页面较长的电商网站，发现页面上大量存在3d加速元素，但其实除了头部的轮播动画，并没有其余动画。经查询得知，头部动画运用到3d加速，但同时导致下面其他相对和绝对定位的元素都被放在复合层中。解决方法可以在头部轮播加上层级z-index，人为提升动画元素的z-index，让浏览器知道这个元素的层排序，就不会把其他z-index比它高的元素也弄到复合层中了，加上后页面如下：</p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/QQ图片20150922151130.png" alt="jpg3">.</p>
+<p><strong>四.总结</strong></p>
+<p>经过以上讨论，在前端web渲染上应尽量减少reflow和repaint。css动画可以适当开启3d（硬件）加速提升动画流畅性，但要注意使用方法，我们可以在动画上增加层级来告诉浏览器，避免不必要的GPU阻塞。</p>
+<p>参考文献：</p>
+<p><a href="http://mp.weixin.qq.com/s?__biz=MzA5NTM2MTEzNw==&amp;mid=379618526&amp;idx=1&amp;sn=bd7bc6f95f3344c3154a0e6868e7c100&amp;scene=1&amp;srcid=0922qh4Zi1QBJCS6qV5JdqzQ&amp;from=groupmessage&amp;isappinstalled=0#rd" target="_blank" rel="noopener">css硬件加速也有坑 ——张云龙</a></p>
+
+  </div>
+  <div class="post-footer">
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

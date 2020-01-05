@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>JS apply和call方法 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="JavaScript">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">JS apply和call方法</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2015-10-22</span>
+  </div>
+  
+  <div class="post-content">
+    <p>这几天重新翻了遍  <a href="http://bonsaiden.github.io/JavaScript-Garden/zh/#function.arguments" target="_blank" rel="noopener">js秘密花园</a>。 讲到之前忽略的call和apply方法，觉得有必要整理一下。</p>
+<p>w3cschool的例子解释：</p>
+<p>call()方法的第一个参数用作this的对象，其他参数都直接传递给函数本身。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function sayColor(sPrefix,sSuffix) &#123;</span><br><span class="line"></span><br><span class="line">    alert(sPrefix + this.color + sSuffix);</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var obj = new Object();</span><br><span class="line"></span><br><span class="line">obj.color = &quot;blue&quot;;</span><br><span class="line"></span><br><span class="line">sayColor.call(obj, &quot;The color is &quot;, &quot;a very nice color indeed.&quot;);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>对象obj的color属性等于blue；</li>
+<li>调用call()方法时，第一个参数是obj，即赋予sayColor()函数的this关键字值是obj.</li>
+<li>第二个和第三个参数是字符串，与sayColor()函数中的参数sPrefix和sSuffix匹配；</li>
+</ul>
+<p>apply()方法有两个参数，用作this的对象和要传递给函数的参数的数组</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">function sayColor(sPrefix,sSuffix) &#123;</span><br><span class="line"></span><br><span class="line">    alert(sPrefix + this.color + sSuffix);</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">var obj = new Object();</span><br><span class="line"></span><br><span class="line">obj.color = &quot;blue&quot;;</span><br><span class="line"></span><br><span class="line">sayColor.apply(obj, new Array(&quot;The color is &quot;, &quot;a very nice color indeed.&quot;));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>调用apply()方法时，第一个参数仍是obj，即sayColor()函数中的this值是obj；</li>
+<li>第二个参数则与sayColor()对应参数相匹配；</li>
+</ul>
+<p>结合这两个例子，其实就可以明白call与apply就是为了改变对象的this。它们的第一个参数都是要传入给当前对象的对象（this），后面的参数都是传递给当前对象的参数。比如方法里写了this，普通调用这个方法这个this的可能是window，而如果用call，第一个参数写啥，this就是啥。</p>
+<p>再举一个例子更浅显地说明它们的作用：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">function People()&#123;&#125;</span><br><span class="line"></span><br><span class="line">   People.prototype=&#123;</span><br><span class="line"></span><br><span class="line">   age:&quot;22&quot;,</span><br><span class="line"></span><br><span class="line">   card:function()&#123;</span><br><span class="line"></span><br><span class="line">     console.log(&quot;I am &quot;+this.age);</span><br><span class="line"></span><br><span class="line">   &#125;</span><br><span class="line"></span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line">var xiaoming = new People();</span><br><span class="line"></span><br><span class="line">xiaoming.card();</span><br></pre></td></tr></table></figure>
+<p>现在我们有另外一个人xiaohong={age:”20”}。可以直接用call或apply：</p>
+<p><code>xiaoming.card.call(xiaohong)</code></p>
+<p>这样我就不需要重新定义xiaohong了。</p>
+<p>那么call和apply有什么区别呢，其实只在于两个函数接受的参数形式不同。</p>
+<p>Function.apply(obj,args)方法能接受两个参数：obj这个对象将代替Function类的this对象；args讲作为参数传递给Function。</p>
+<p>Function.call(obj,[arg1,arg2..])：obj这个对象将代替Function类的this对象；[arg1,arg2..]：这个是一个参数列表。</p>
+<p>总而言之，即是apply传入的是一个参数数组，即将多个参数组合成为一个数组传入，而call则作为call的参数传入。func.call(func1,var1,var2,var3)对应的apply写法为：func.apply(func1,[var1,var2,var3])</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

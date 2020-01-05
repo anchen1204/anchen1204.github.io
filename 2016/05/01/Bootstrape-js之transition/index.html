@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Bootstrape js之transition - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="JavaScript">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Bootstrape js之transition</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-05-01</span>
+  </div>
+  
+  <div class="post-content">
+    <h2 id="transitionend函数"><a href="#transitionend函数" class="headerlink" title="transitionend函数"></a>transitionend函数</h2><h3 id="一-js中的transitionend事件"><a href="#一-js中的transitionend事件" class="headerlink" title="一.js中的transitionend事件"></a>一.js中的transitionend事件</h3><p>首先JavaScript有一个transitionend事件，在css完成过渡后触发。</p>
+<p>与css3的transition一样，需要加浏览器前缀：webkitTransitionEnd(chrome/safari3.1-6.0)、mozTransitionEnd(Firfox)、oTransitionEnd(opera)/transitionend(IE9+)。</p>
+<p>栗子：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">demo.addEventListener(&apos;webkitTransitionEnd&apos;,function()&#123;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<p><strong>注意：addEventListener（）方法是ie8及以下浏览器不支持。</strong></p>
+<p>同时，transition动画是不具有start的事件，只有transitionEnd事件。</p>
+<p>但是animation动画有animationend、animationiteration、animationstart三个事件，分别对应动画结束播放触发、动画重复播放触发和动画开始播放触发。</p>
+<p>这些事件都是用<code>element.addEventListener(&#39;事件&#39;,end,false)</code>来捕捉。</p>
+<p>animationend和transitionend有一个明显的区别是：animationend会在元素的整个动画执行完毕再触发，而transitionend会每一个样式属性值改变一次状态触发一次，不同的属性值改变会累计触发，</p>
+<p>比如下面的例子，webkitAnimationEnd事件只在元素向右移动,然后向左返回之后触发一次,而webkitTransitionEnd事件将在元素向右移动之后触发一次,在元素向左返回之后再触发一次。</p>
+<p><a href="http://anchen1204.github.io/demo/transitionend.html" target="_blank" rel="noopener">栗子</a></p>
+<p>以上为js的总结，接下来继续bootstrape。</p>
+<h3 id="二-bootstrape的transition"><a href="#二-bootstrape的transition" class="headerlink" title="二.bootstrape的transition"></a>二.bootstrape的transition</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line">+function ($) &#123;</span><br><span class="line"></span><br><span class="line">  &apos;use strict&apos;;</span><br><span class="line"></span><br><span class="line">  // CSS TRANSITION SUPPORT (Shoutout: http://www.modernizr.com/)</span><br><span class="line"></span><br><span class="line">  // ============================================================</span><br><span class="line"></span><br><span class="line">  function transitionEnd() &#123;</span><br><span class="line"></span><br><span class="line">    var el = document.createElement(&apos;bootstrap&apos;);</span><br><span class="line"></span><br><span class="line">    var transEndEventNames = &#123;</span><br><span class="line"></span><br><span class="line">      WebkitTransition : &apos;webkitTransitionEnd&apos;,</span><br><span class="line"></span><br><span class="line">      MozTransition    : &apos;transitionend&apos;,</span><br><span class="line"></span><br><span class="line">      OTransition      : &apos;oTransitionEnd otransitionend&apos;,</span><br><span class="line"></span><br><span class="line">      transition       : &apos;transitionend&apos;</span><br><span class="line"></span><br><span class="line">    &#125;//把所有浏览器前缀整合为一个对象</span><br><span class="line"></span><br><span class="line">    for (var name in transEndEventNames) &#123;</span><br><span class="line"></span><br><span class="line">      if (el.style[name] !== undefined) &#123;</span><br><span class="line"></span><br><span class="line">        return &#123; end: transEndEventNames[name] &#125;</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;//for遍历前缀，判断css属性是否存在</span><br><span class="line"></span><br><span class="line">    return false // explicit for ie8 (  ._.)，若不存在css属性则返回，此时可添加回调函数</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  $.fn.emulateTransitionEnd = function (duration) &#123;</span><br><span class="line"></span><br><span class="line">    var called = false;//transitionend时间是否已经触发的标识</span><br><span class="line"></span><br><span class="line">    var $el = this</span><br><span class="line"></span><br><span class="line">    $(this).one(&apos;bsTransitionEnd&apos;, function () &#123; called = true &#125;)//true为已经触发</span><br><span class="line"></span><br><span class="line">    var callback = function () &#123;</span><br><span class="line"></span><br><span class="line"> if (!called) (el).trigger($.support.transition.end) &#125;//未触发，强制触发</span><br><span class="line"></span><br><span class="line">    setTimeout(callback, duration)//一段时间后检测是否触发，因为有时属性值没有发生改变并不会触发，但是在页面过程中可能后来会执行，确保每次回调都被调用需要使用定时器</span><br><span class="line"></span><br><span class="line">    return this</span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  $(function () &#123;</span><br><span class="line"></span><br><span class="line">    $.support.transition = transitionEnd()</span><br><span class="line"></span><br><span class="line">    if (!$.support.transition) return</span><br><span class="line"></span><br><span class="line">    $.event.special.bsTransitionEnd = &#123;</span><br><span class="line"></span><br><span class="line">      bindType: $.support.transition.end,</span><br><span class="line"></span><br><span class="line">      delegateType: $.support.transition.end,</span><br><span class="line"></span><br><span class="line">      handle: function (e) &#123;</span><br><span class="line"></span><br><span class="line">        if ($(e.target).is(this)) return e.handleObj.handler.apply(this, arguments)</span><br><span class="line"></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  &#125;)//自定义事件，添加事件回调可以这样element.one(&apos;bsTransitionEnd&apos;,function()&#123;&#125;).emulateTransitionEnd(1000);</span><br><span class="line"></span><br><span class="line">&#125;(jQuery);</span><br></pre></td></tr></table></figure>
+<p>以上为原版代码。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

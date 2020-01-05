@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Day learn,day up-1(日常更新) - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="前端零碎">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Day learn,day up-1(日常更新)</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-08-13</span>
+  </div>
+  
+    <div id="toc" class="toc-article">
+      <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript"><span class="toc-text">JavaScript</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#原型"><span class="toc-text">原型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#如何判断一个变量是对象还是数组？"><span class="toc-text">如何判断一个变量是对象还是数组？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Promise"><span class="toc-text">Promise</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#document-visibilityState-amp-amp-document-hidden"><span class="toc-text">document.visibilityState &amp;&amp; document.hidden</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#querySelector和querySelectorAll"><span class="toc-text">querySelector和querySelectorAll</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web相关"><span class="toc-text">Web相关</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#XSS"><span class="toc-text">XSS</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#跨域"><span class="toc-text">跨域</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Vue"><span class="toc-text">Vue</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MVVM"><span class="toc-text">MVVM</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#你或许不知道Vue的这些小技巧"><span class="toc-text">你或许不知道Vue的这些小技巧</span></a></li></ol></li></ol>
+    </div>
+    
+  <div class="post-content">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>忽略我这个中文式英语的标题。</p>
+<p>身为一个记性不咋地的前端渣渣，觉得平时看的一些文章太散了，特开此文作为一种记录，可谓好记性不如烂笔头，也算是逼自己要经常学习。文章的日期为最后更新时间，题目顺序不分先后，希望能经常保持置顶状态，目录到达一定长度时会重开一篇。</p>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="原型"><a href="#原型" class="headerlink" title="原型"></a>原型</h3><p>之前写过一个使用：<a href="https://anchen1204.github.io/2016/06/04/javascript%E5%AF%B9%E8%B1%A1%E5%92%8C%E5%8E%9F%E5%9E%8B/" target="_blank" rel="noopener">javascript对象和原型</a> ，虽然在那个项目里这么用了，其实还是一知半解，这几天重新翻了下《你不知道的JavaScript 上卷》</p>
+<p>首先，Javascript是面向对象的语言，它没有类；</p>
+<p><strong>翻出n久前做的一个笔记：</strong></p>
+<ol>
+<li>所有的函数对象都有一个prototype属性，这个属性引用了一个对象，就是原型（对象）；</li>
+</ol>
+<ol>
+<li><p>普通对象的内部<code>_proto_</code>指向它构造函数的prototype，原型对象也是普通对象的一种；</p>
+</li>
+<li><p>原型对象主要用于继承，js在创建对象时，都有一个<code>_proto</code>的内置属性，用于指向创建它的函数对象的原型对象prototype</p>
+</li>
+<li><p>原型和原型链是js实现继承的一种模型，原型链的形成靠<code>_proto_</code>,而不是prototype;</p>
+</li>
+<li><p>能修改prototype指向的对象，为prototype赋予一个不同的对象，可以实现一种简单的继承；</p>
+</li>
+<li><p>访问一个对象的原型可以使用ES5中的<code>Object.getPrototype()</code>方法，或ES6中的<code>_proto_</code>属性</p>
+<p>​</p>
+</li>
+</ol>
+<p><strong>然后在chrome浏览器做一个试验</strong></p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/1791532867937_.pic.jpg" alt=""></p>
+<ul>
+<li><p>函数有一个特殊特性，所有的<strong>函数</strong>默认都会拥有一个prototype的公有且不可枚举的属性，它会指向另一个对象，通常称为这个函数的原型对象。就是说，<strong>User函数的原型可以通过User.prototype来访问</strong>。</p>
+</li>
+<li><p>打印了User.prototype可以看的原型对象默认有一个公有的属性，constructor，这个属性引用的是对象关联的函数，就是说这里 User.prototype.constructor === User;</p>
+</li>
+<li><p>此外，可以看到通过构造函数调用new User( )创建的对象u，也有一个.constructor属性，指向“创建这个对象的函数”，也就是a.constructor ===User;</p>
+</li>
+<li><p>构造函数：User函数其实是一个普通的函数，可是为什么它会认为是一个“构造函数”，原因是，在普通的函数前面加上new关键字后，就会把这个函数调用变成一个“构造函数调用”。new会劫持所有普通函数并用构造对象的形式来调用它。就是说<strong>函数不是构造函数，但是当且仅当使用new时，函数调用会变成“构造函数调用”</strong></p>
+</li>
+<li><p>普通对象的内部<code>_proto_</code>指向它构造函数的prototype，原型对象也是普通对象的一种,也就是说</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">u.__proto__===User.__proto__ <span class="comment">//true</span></span><br><span class="line">u.__proto__===User.prototype <span class="comment">//true</span></span><br><span class="line">u.prototype <span class="comment">//undefined,原因，u并不是一个函数对象，它只是一个对象，var u = ....</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>​                       </p>
+<p><img src="http://7xkluu.com1.z0.glb.clouddn.com/1801532867953_.pic.jpg" alt="">                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          </p>
+<p>  <img src="http://7xkluu.com1.z0.glb.clouddn.com/1811532867980_.pic.jpg" alt=""></p>
+<p>我们给User.prototype设置了一个toString()函数，u是可以访问到的。</p>
+<p>同样的，<code>u.__proto__</code>代表指向它构造函数的prototype，其实也是等于User.prototype.</p>
+<p>那什么是原型链？如果一个原型对象的原型不为null，就是原型链，我们可以通过<code>__proto__</code>来遍历原型链（ES6）</p>
+<p><strong>那ES5的继承和ES6的继承有什么区别？</strong></p>
+<p>ES5的继承是通过prototype或构造函数机制来实现。<strong>ES5的继承实质上是先创建子类的实例对象，然后再将父类的方法添加到this上</strong>（Parent.apply(this)）。</p>
+<p>ES6的继承机制完全不同，<strong>实质上是先创建父类的实例对象this（所以必须先调用父类的super()方法），然后再用子类的构造函数修改this</strong>。</p>
+<blockquote>
+<p>具体的：ES6通过class关键字定义类，里面有构造方法，类之间通过extends关键字实现继承。子类必须在constructor方法中调用super方法，否则新建实例报错。因为子类没有自己的this对象，而是继承了父类的this对象，然后对其进行加工。如果不调用super方法，子类得不到this对象。</p>
+<p>ps：super关键字指代父类的实例，即父类的this对象。在子类构造函数中，调用super后，才可使用this关键字，否则报错。</p>
+</blockquote>
+<h3 id="如何判断一个变量是对象还是数组？"><a href="#如何判断一个变量是对象还是数组？" class="headerlink" title="如何判断一个变量是对象还是数组？"></a>如何判断一个变量是对象还是数组？</h3><p>第一念头是使用<strong>typeof</strong>，但是是有问题的，因为数组也是对象的一种，这个问题的问法其实应该是，<strong>如何判断一个对象是数组</strong>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var b = [1,2,3];</span><br><span class="line">typeof b;//&quot;object&quot;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p><strong>instanceof操作符</strong></p>
+<p>这个操作符是检测对象的原型链是否指向构造函数的prototype对象的。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">var arr = [1,2,3,1];   </span><br><span class="line">alert(arr instanceof Array); // true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>对象的constructor属性</strong></p>
+<p>每个对象都有constructor的属性，指向“创建这个对象的函数”</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">arr.constructor == Array //true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>Object.prototype.toString</strong></p>
+<blockquote>
+<p>Object.prototype.toString的行为：首先，取得对象的一个内部属性[[Class]]，然后依据这个属性，返回一个类似于”[object Array]”的字符串作为结果(看过ECMA标准的应该都知道，[[]]用来表示语言内部用到的、外部不可直接访问的属性，称为“内部属性”)。利用这 个方法，再配合call，我们可以取得任何对象的内部属性[[Class]]，然后把类型检测转化为字符串比较，以达到我们的目的。</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">function isArrayFn (o) &#123;  </span><br><span class="line"> return Object.prototype.toString.call(o) === &apos;[object Array]&apos;;   </span><br><span class="line">&#125;</span><br><span class="line">var arr = [1,2,3,1];   </span><br><span class="line"> </span><br><span class="line">alert(isArrayFn(arr));// true</span><br></pre></td></tr></table></figure>
+<p>call改变toString的this引用为待检测的对象，返回此对象的字符串表示，然后对比此字符串是否是’[object Array]’，以判断其是否是Array的实例.</p>
+</li>
+<li><p><strong>Array.isArray()</strong></p>
+<p>ECMAScript5将<strong>Array.isArray()</strong>正式引入JavaScript，目的就是准确地检测一个值是否为数组。</p>
+<p>IE9+、 Firefox 4+、Safari 5+、Opera 10.5+和Chrome都实现了这个方法。</p>
+<p>但是在IE8之前的版本是不支持的。</p>
+</li>
+<li><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">var arr = [1,2,3,1];  </span><br><span class="line">var arr2 = [&#123; abac : 1, abc : 2 &#125;];  </span><br><span class="line"> </span><br><span class="line">function isArrayFn(value)&#123;</span><br><span class="line">	if (typeof Array.isArray === &quot;function&quot;) &#123;</span><br><span class="line">		return Array.isArray(value);    </span><br><span class="line">	&#125;else&#123;</span><br><span class="line">		return Object.prototype.toString.call(value) === &quot;[object Array]&quot;;    </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">alert(isArrayFn(arr));// true</span><br></pre></td></tr></table></figure>
+<p>typeof Array.isArray === “function” 来判断浏览器支不支持用isArray，不支持的话用Object.prototype.toString。因为Object.prototype.toString对识别内置对象时往往十分有用，但对于自定义对象就可能识别不出。</p>
+</li>
+</ul>
+<h3 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h3><p>Promise是ES6为了解决异步编程所诞生的，主要用于ajax请求，回调函数，复杂操作判断。</p>
+<p>PS：异步操作解决方案：<code>Promise</code>、<code>Generator</code>、定时器、还有ES7的<code>async</code></p>
+<h3 id="document-visibilityState-amp-amp-document-hidden"><a href="#document-visibilityState-amp-amp-document-hidden" class="headerlink" title="document.visibilityState &amp;&amp; document.hidden"></a>document.visibilityState &amp;&amp; document.hidden</h3><p>PageVisibility API是用来判断页面可见性，即浏览器标签页被隐藏或者显示的判断。</p>
+<p>document.visibilityState：</p>
+<ul>
+<li>visible：页面内容至少部分可见，即可能是已更非最小化窗口的可见标签页</li>
+<li>hidden：页面内容对用户不可见，即可能是后台标签页或者最小化窗口等</li>
+<li>prerender：网页内容被预渲染且用户不可见</li>
+<li>unloaded：网页被卸载</li>
+</ul>
+<p>一般我们使用document.hidden就可以满足需求</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">function getHiddenProp()&#123;</span><br><span class="line">    var prefixes = [&apos;webkit&apos;,&apos;moz&apos;,&apos;ms&apos;,&apos;o&apos;];</span><br><span class="line">    </span><br><span class="line">    // if &apos;hidden&apos; is natively supported just return it</span><br><span class="line">    if (&apos;hidden&apos; in document) return &apos;hidden&apos;;</span><br><span class="line">    </span><br><span class="line">    // otherwise loop over all the known prefixes until we find one</span><br><span class="line">    for (var i = 0; i &lt; prefixes.length; i++)&#123;</span><br><span class="line">        if ((prefixes[i] + &apos;Hidden&apos;) in document) </span><br><span class="line">            return prefixes[i] + &apos;Hidden&apos;;</span><br><span class="line">    &#125;</span><br><span class="line"> </span><br><span class="line">    // otherwise it&apos;s not supported</span><br><span class="line">    return null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">function isHidden() &#123;</span><br><span class="line">    var prop = getHiddenProp();</span><br><span class="line">    if (!prop) return false;</span><br><span class="line">    </span><br><span class="line">    return document[prop];</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><a href="http://www.css88.com/archives/6103" target="_blank" rel="noopener">http://www.css88.com/archives/6103</a></p>
+<p>此属性需要注意兼容性。</p>
+<ul>
+<li><p>做一个保存草稿的页面，每隔十分钟会自动保存一次，如果在多个页面中打开了同一页面，怎样确保往数据库里存的是用户想要保存的内容。</p>
+<p>sessionStorage + 修改时间戳，做异步写入，然后用事件节流的方式</p>
+</li>
+</ul>
+<h3 id="querySelector和querySelectorAll"><a href="#querySelector和querySelectorAll" class="headerlink" title="querySelector和querySelectorAll"></a>querySelector和querySelectorAll</h3><p>这个为H5新特性。</p>
+<ul>
+<li>querySelector:返回指定元素节点的子树中匹配选择器的集合中的第一个元素，如果没有返回null</li>
+<li>querySelectorAll:按文档顺序返回指定元素节点的子树中匹配选择器的元素集合，如果没有匹配返回空集合</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&lt;div id=&quot;test&quot;&gt;</span><br><span class="line">        &lt;div class=&quot;dialog&quot;&gt;</span><br><span class="line">            &lt;p&gt;123&lt;/p&gt;</span><br><span class="line">            &lt;span&gt;456&lt;/span&gt;</span><br><span class="line">            &lt;div&gt;789&lt;/div&gt;</span><br><span class="line">            &lt;div class=&quot;text&quot;&gt;452&lt;/div&gt;</span><br><span class="line">        &lt;/div&gt;</span><br><span class="line">    &lt;/div&gt;</span><br><span class="line">    </span><br><span class="line"> var test=document.querySelector(&apos;#test&apos;);</span><br><span class="line">        var subDivs = test.querySelectorAll(&apos;div&apos;);</span><br><span class="line">        var text = document.querySelectorAll(&apos;div[class=text]&apos;);</span><br></pre></td></tr></table></figure>
+<p>兼容性<br>IE8+（含）,针对mobile更优化</p>
+<p><a href="http://www.cnblogs.com/dolphinX/p/3354318.html" target="_blank" rel="noopener">有bug</a></p>
+<p><a href="http://blog.lxjwlt.com/front-end/2015/09/01/u-dont-know-queryselector.html?utm_source=caibaojian.com" target="_blank" rel="noopener">[译]你所不了解的querySelector</a></p>
+<p>​                                          </p>
+<h2 id="Web相关"><a href="#Web相关" class="headerlink" title="Web相关"></a>Web相关</h2><h3 id="XSS"><a href="#XSS" class="headerlink" title="XSS"></a>XSS</h3><p><a href="https://mp.weixin.qq.com/s/c_QTdLu6vsYcIiuPRZyjyA" target="_blank" rel="noopener">浅析前端安全之 XSS</a></p>
+<p>看了上面那篇文章意识到一个很大的问题，因为我之前没有仔细想这方面的东西。但是我遇到过一次，表单中用户名以html形式渲染<code>&lt;h1&gt;123&lt;/h1&gt;</code>,他的名字设置为类似这样，结果json传回来后渲染到页面变成123 标题样式。</p>
+<p>解决我方法是，我在输入表单这一块，先<code>encodeURIComponent</code>解析，发给后台，然后对收到json的这个数据使用<code>decodeURIComponent</code>进行解码。</p>
+<p>vue中不使用v-html之类，直接  输出，使用转义功能。</p>
+<p>要慢慢把以前的项目规范起来，防止漏洞才行，以后也要注意这一方面，有空再和后端探讨一下。</p>
+<h3 id="跨域"><a href="#跨域" class="headerlink" title="跨域"></a>跨域</h3><p>首先说下我在实际项目中遇到的问题:</p>
+<ul>
+<li>一般都是Ajax请求的跨域问题，需要后端配合。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">$.ajax(&#123;</span><br><span class="line">    url: <span class="string">'xxx'</span>,</span><br><span class="line">    type: <span class="string">'get'</span>,</span><br><span class="line">    dataType: <span class="string">'jsonp'</span>,  <span class="comment">// 请求方式为jsonp</span></span><br><span class="line">    jsonpCallback: <span class="string">"onBack"</span>,    <span class="comment">// 自定义回调函数名</span></span><br><span class="line">    data: &#123;&#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>​    jsonp缺点：只能实现get一种请求。</p>
+<p>遇到的一个错误<code>Uncaught SyntaxError: Unexpected token :</code></p>
+<p>这是因为后台直接给我返回json，而我用jsonp请求，简单说下后台返回的格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// jsonStr：json格式的数据</span></span><br><span class="line"><span class="keyword">return</span>  <span class="string">"jsonpCallback("</span> + jsonStr+ <span class="string">");"</span> ;</span><br></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//jsonp</span></span><br><span class="line">jsonpCallback(&#123;</span><br><span class="line">    <span class="string">"url"</span>: <span class="string">"1234"</span>,</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"abcd"</span></span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>iframe跨域</li>
+</ul>
+<p>为什么会遇到这个问题，因为有次项目有个手机绑定uid的功能，需要用到第三方的手机验证登陆模块。</p>
+<p>iframe地址为：a.yy.com/…</p>
+<p>我的页面地址为：b.yy.com/…</p>
+<p>这个时候会产生跨域问题，需要在两个页面里加代码：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">document</span>.domain = <span class="string">'yy.com'</span>;</span><br></pre></td></tr></table></figure>
+<p>今天看到的这篇文章基本把所有跨域和解决方法列得很全面了：</p>
+<p><a href="https://segmentfault.com/a/1190000011145364" target="_blank" rel="noopener">前端常见跨域解决方案（全）</a></p>
+<h2 id="Vue"><a href="#Vue" class="headerlink" title="Vue"></a>Vue</h2><h3 id="MVVM"><a href="#MVVM" class="headerlink" title="MVVM"></a>MVVM</h3><p>最近被一篇文章刷屏了：<a href="https://mp.weixin.qq.com/s/7IW4WPTqjOieNVpQX9vBFQ" target="_blank" rel="noopener">别了，jQuery</a></p>
+<p>文末那段话真实醍醐灌耳：</p>
+<blockquote>
+<p>“开发中使用库当然没问题，但前提是不要仅仅只知道怎么使用，更要知道它的工作原理。如果不能超越这些库，那在这些库变成你的拐杖之时，你也会随之“残废”。在使用某个库之前，一定要花时间学习掌握JavaScript和DOM。我们从一开头就强调“知其所以然”的重要性，告诉大家不能满足于仅仅“知其然”。如果使用了库，却不晓得其背后原理，无论对自己还是对产品都将是有害的。”</p>
+<p>Ray建议，学习前端开发，本来应该是这个顺序：</p>
+<ol>
+<li>学习JavaScript</li>
+<li>学习Web API</li>
+<li>学习jQuery（或其他框架/库）</li>
+</ol>
+<p>但很多人实际上是从#3开始的，然后过了很久才开始#1和#2（甚至从来没想过#1和#2）。结果就是“只知其然，而不知其所以然”。</p>
+</blockquote>
+<p>说来惭愧，我就是那个从#3开始的人，所以现在确实业务代码写了很多，工作似乎都能完成，但是只有自己知道，面试的时候就知道，基础不行。不过没事，总有一天可以行的。</p>
+<p>好了，回到正文：MVVM：</p>
+<p><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/87/MVVMPattern.png/330px-MVVMPattern.png" alt="MVVMPattern.png"></p>
+<p><strong>Model–view–viewmodel</strong> (<strong>MVVM</strong>) is a software <a href="https://en.wikipedia.org/wiki/Architectural_pattern" target="_blank" rel="noopener">architectural pattern</a>.</p>
+<p>MVVM最早由微软提出来，它借鉴了桌面应用程序的MVC思想，在前端页面中，把Model用纯JavaScript对象表示，View负责显示，两者做到了最大限度的分离。</p>
+<p>把Model和View关联起来的就是ViewModel。ViewModel负责把Model的数据同步到View显示出来，还负责把View的修改同步回Model。</p>
+<ul>
+<li><p>常用的MVVM框架有：Angular，Backbone.js和我现在经常用的Vue.js</p>
+</li>
+<li><p>单向/双向绑定：</p>
+<p>Vue为例，直白一点理解就是，单向绑定意思如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">p</span>&gt;</span>&#123;&#123;data&#125;&#125;<span class="tag">&lt;/<span class="name">p</span>&gt;</span> //负责显示的是DOM节点可以用&#123;&#123; &#125;&#125;来引用Model的属性</span><br></pre></td></tr></table></figure>
+<p>双向绑定意思如下：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">p&gt;<span class="tag">&lt;<span class="name">input</span> <span class="attr">v-model</span>=<span class="string">"email"</span>&gt;</span><span class="tag">&lt;/<span class="name">p</span>&gt;</span> // 使用v-model指令，把这里的input和Model里的某个属性做双向绑定</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>同步</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;ol&gt;</span><br><span class="line">    &lt;li v-<span class="keyword">for</span>=<span class="string">"t in todos"</span>&gt;</span><br><span class="line">        &lt;dl&gt;</span><br><span class="line">            &lt;dt&gt;&#123;&#123; t.name &#125;&#125;&lt;<span class="regexp">/dt&gt;</span></span><br><span class="line"><span class="regexp">            &lt;dd&gt;&#123;&#123; t.description &#125;&#125;&lt;/</span>dd&gt;</span><br><span class="line">        &lt;<span class="regexp">/dl&gt;</span></span><br><span class="line"><span class="regexp">    &lt;/</span>li&gt;</span><br><span class="line">&lt;<span class="regexp">/ol&gt;</span></span><br></pre></td></tr></table></figure>
+<p>根据Modal里的todos变化，比如数组增加或减少，这里html会相应的进行DOM节点的增加或减少，完全由数据决定，开发者无需去关注html的DOM节点。</p>
+<blockquote>
+<p>Vue之所以能够监听Model状态的变化，是因为JavaScript语言本身提供了<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Proxy" target="_blank" rel="noopener">Proxy</a>或者<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/observe" target="_blank" rel="noopener">Object.observe()</a>机制来监听对象状态的变化。但是，对于数组元素的赋值，却没有办法直接监听</p>
+</blockquote>
+</li>
+<li><p>MVVM的适用范围</p>
+<p>MVVM最大的优势是编写前端逻辑非常复杂的页面，尤其是需要大量DOM操作的逻辑，利用MVVM可以极大地简化前端页面的逻辑。</p>
+<p>然而对于以展示逻辑为主的页面，例如，新闻，博客、文档等，是不建议使用MVVM展示数据，因为这些页面需要被搜索引擎索引，<strong>而搜索引擎无法获取使用MVVM并通过API加载的数据</strong>。</p>
+<p>所以，需要SEO（Search Engine Optimization）的页面，不能使用MVVM展示数据。不需要SEO的页面，如果前端逻辑复杂，就适合使用MVVM展示数据，例如，工具类页面，复杂的表单页面，用户登录后才能操作的页面等等。</p>
+</li>
+</ul>
+<h3 id="你或许不知道Vue的这些小技巧"><a href="#你或许不知道Vue的这些小技巧" class="headerlink" title="你或许不知道Vue的这些小技巧"></a>你或许不知道Vue的这些小技巧</h3><p>文章地址：<a href="http://obkoro1.com/2018/06/03/%E4%BD%A0%E6%88%96%E8%AE%B8%E4%B8%8D%E7%9F%A5%E9%81%93Vue%E7%9A%84%E8%BF%99%E4%BA%9B%E5%B0%8F%E6%8A%80%E5%B7%A7/" target="_blank" rel="noopener">你或许不知道Vue的这些小技巧</a>     <a href="https://juejin.im/post/5a587b46f265da3e3b7a7677" target="_blank" rel="noopener">Vue 实践过程中的几个问题</a></p>
+<ul>
+<li><p>Vue 数组/对象更新 视图不更新</p>
+<p>这篇文章作者给了个例子，其实还蛮常见的。虽然我暂时没有遇到这个问题…因为我比较常用里面的第三种方法：替换数组/对象…</p>
+<p>由于 JavaScript 的限制，Vue 不能检测以下变动的数组：</p>
+<ol>
+<li>当你利用索引直接设置一个项时，例如：<code>vm.items[indexOfItem] = newValue</code></li>
+<li>当你修改数组的长度时，例如：<code>vm.items.length = newLength</code></li>
+</ol>
+<p>官网文档：<a href="https://cn.vuejs.org/v2/guide/list.html#%E6%95%B0%E7%BB%84%E6%9B%B4%E6%96%B0%E6%A3%80%E6%B5%8B" target="_blank" rel="noopener">数组更新检测</a></p>
+<ul>
+<li><p>Vue 包含一组观察数组的变异方法，会触发视图更新</p>
+</li>
+<li><p>替换数组</p>
+</li>
+<li><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">this</span>.$set(<span class="keyword">this</span>.arr, <span class="number">0</span>, <span class="string">"OBKoro1"</span>); <span class="comment">// 改变数组</span></span><br><span class="line"><span class="keyword">this</span>.$set(<span class="keyword">this</span>.obj, <span class="string">"c"</span>, <span class="string">"OBKoro1"</span>); <span class="comment">// 改变对象</span></span><br><span class="line"><span class="keyword">this</span>.arr.splice(newLength)</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>当你把一个普通的 JavaScript 对象传给 Vue 实例的 data 选项，Vue 将遍历此对象所有的属性，并使用<br>Object.defineProperty 把这些属性全部转为 getter/setter。</p>
+<p>Object.defineProperty 是 ES5 中一个无法 shim 的特性，这也就是为什么 Vue 不支持 IE8 以及更低版本浏览器的原因。 </p>
+<p>用户看不到 getter/setter，但是在内部它们让 Vue 追踪依赖，在属性被访问和修改时通知变化。这里需要注意的问题是浏览器控制台在打印数据对象时 getter/setter 的格式化并不同，所以你可能需要安装 vue-devtools 来获取更加友好的检查接口。</p>
+<p> 每个组件实例都有相应的 watcher 实例对象，它会在组件渲染的过程中把属性记录为依赖，之后当依赖项的 setter 被调用时，会通知 watcher 重新计算，从而致使它关联的组件得以更新。 </p>
+<p><a href="https://blog.csdn.net/zifeiyu130/article/details/78950244" target="_blank" rel="noopener">vue中数组和对象更改后视图不刷新的问题</a></p>
+</blockquote>
+<p>总结：数据的改变必须能够触发set方法，否则无法响应数据变化。</p>
+</li>
+</ul>
+</li>
+<li><p>一段取值的v-for</p>
+<p><code>&lt;div v-for=&quot;n in 5&quot;&gt;&lt;span&gt;这里会被渲染5次，渲染模板&lt;/span&gt; &lt;/div&gt;</code></p>
+<p>v-if尽量不要与v-for在同一节点使用(性能):</p>
+<p>v-for 的优先级比 v-if 更高,如果它们处于同一节点的话，那么每一个循环都会运行一遍v-if。</p>
+</li>
+<li><p>Vue滚动行为</p>
+<p>这个问题涉及到官网文档的以下两篇</p>
+<p><a href="https://router.vuejs.org/zh/guide/essentials/history-mode.html" target="_blank" rel="noopener">HTML5 History 模式</a></p>
+<p><a href="https://router.vuejs.org/zh/guide/advanced/scroll-behavior.html" target="_blank" rel="noopener">Vue Rouer 滚动行为</a></p>
+<ul>
+<li><p>history模式</p>
+<p><a href="http://yoursite.com/#/a/b">http://yoursite.com/#/a/b</a>  //hash模式,即默认模式<br> <a href="http://yoursite.com/a/b">http://yoursite.com/a/b</a>  //history模式</p>
+</li>
+</ul>
+</li>
+<li><p>v-show和v-if</p>
+</li>
+</ul>
+<ol>
+<li>v-if是删除/添加Dom标签，不占据文档位置,v-show切换css的display属性，控制显示隐藏，还会占据文档Ω位置。</li>
+<li><p>v-if会删除dom标签所以v-if性能消耗会高一些，需要频繁切换的话，使用v-show会好一点。</p>
+<p>​</p>
+</li>
+</ol>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/前端零碎/">前端零碎</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

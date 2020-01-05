@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>rem+sass移动端自适应 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="css">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">rem+sass移动端自适应</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-03-29</span>
+  </div>
+  
+  <div class="post-content">
+    <p> 首先说一个不离题的题外话，上周末的时候在公司加班，是一个移动端的活动页，遇到一个问题。</p>
+<p> 页面一开始采用是这一段：</p>
+<p><a href="https://github.com/re54k/mobileweb-utilities/blob/master/util/mobile-util.js" target="_blank" rel="noopener">同事扒来的</a>,总之原理是改变meta标签里的intial-scale来进行整个画布的缩放。</p>
+<p>之前有两个项目都用过适用，所以我也没多想就直接加上去了。</p>
+<p>其实还是各种美好，知道遇到了升级版本为9.3的iphone中的微信内置浏览器，当intial-scale不是1，滑屏时会整个页面左右移动。然后我正好有一个左右移动的类轮播，于是体验就不好了。最后查到是intial-scale的问题后，果断放弃这一大段代码，重新加了几句调整html的根字体大小：</p>
+<p>但是淘宝其实采用的就是以上做法，并没有出现上述问题，记在这里，后续研究更新。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;</span><br><span class="line"></span><br><span class="line">    	  //重置html字体大小</span><br><span class="line"></span><br><span class="line">	      var _resize = function()&#123;</span><br><span class="line"></span><br><span class="line">	        var html = document.documentElement,</span><br><span class="line"></span><br><span class="line">	          w = html.clientWidth/640, w =16*w;</span><br><span class="line"></span><br><span class="line">	        html.setAttribute(&apos;style&apos;, &apos;font-size:&apos; + w + &apos;px&apos;);</span><br><span class="line"></span><br><span class="line">	      &#125;</span><br><span class="line"></span><br><span class="line">	      _resize();</span><br><span class="line"></span><br><span class="line">	      window.addEventListener(&apos;resize&apos;, _resize);</span><br><span class="line"></span><br><span class="line">&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>这样的目的其实一样达到了，而且微信也美好了。</p>
+<p>sass只需要设置:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">$fontRem: 16px;</span><br><span class="line"></span><br><span class="line">@function rem($px) &#123; @return $px / $fontRem * 1rem; &#125;</span><br></pre></td></tr></table></figure>
+<p>就可以很方便的使用啦。</p>
+<p>好了，说完入场就可以进入正题，开始总结啦~</p>
+<h3 id="1-为什么用rem"><a href="#1-为什么用rem" class="headerlink" title="1.为什么用rem"></a>1.为什么用rem</h3><p>rem就是一个相对于根元素的字体大小的单位，还有一个跟它挺像的em，em是相对于父元素字体大小的单位，所以，一个页面根元素的字体大小是固定的，但是每一个元素它的父元素字体大小却不一定都一样，因此更推荐使用rem。</p>
+<p>所以，改变html的根元素大小，整个页面的尺寸也会相应的改变，那么我们根据屏幕尺寸和html根元素比例，就可以做到适应屏幕的大小了。</p>
+<p>那么这个比例怎么算的，这就要看设计稿了，加入设计稿是640px，那么遇到640px的屏幕宽，比例就是1…以此类推</p>
+<p>所以上面的js其实就是动态来根据比例设置根元素的字体大小，默认设计稿为640，比例为<code>w = html.clientWidth/640;</code>,然后定一个基数，为16px，所有有<code>w=16*w;html.setAttribute(&#39;style&#39;, &#39;font-size:&#39; + w + &#39;px&#39;);</code></p>
+<h3 id="2-所有单位需统一"><a href="#2-所有单位需统一" class="headerlink" title="2.所有单位需统一"></a>2.所有单位需统一</h3><p>有一个bug是，某次设置了一个块级元素的height：4rem；然后没有设置宽度，那么宽度就是默认的100%。</p>
+<p>这样的话实际缩放是没有等比例缩放的，在某些分辨率下会出现错位。所以使用rem缩放的话，一定要记得宽高都需要设置好。</p>
+<p>贴一个自己最近做的项目例子吧:<a href="[http://m.jd.ru/channel/smartphone.html](http://m.jd.ru/channel/smartphone.html]">smartphoneM端频道页</a>)</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/css/">css</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

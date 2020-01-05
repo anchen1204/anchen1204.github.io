@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>javascript对象和原型 - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="JavaScript">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">javascript对象和原型</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2016-06-04</span>
+  </div>
+  
+  <div class="post-content">
+    <h3 id="理解prototype"><a href="#理解prototype" class="headerlink" title="理解prototype"></a>理解prototype</h3><ul>
+<li>C.pototype用于建立由new.C创建的对象的原型；</li>
+<li>Object.getPrototypeOf(obj)是ES5中用来获取obj对象的原型对象的标准方法。</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">User</span>(<span class="params">name,passwordHash</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">this</span>.name = name;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">this</span>.passwordHash = passwordHash;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">User.prototype.toString = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">return</span> <span class="string">"[User"</span>+<span class="keyword">this</span>.name+<span class="string">"]"</span>;</span><br><span class="line"></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">User.prototype.checkPass = <span class="function"><span class="keyword">function</span>(<span class="params">password</span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> u = <span class="keyword">new</span> User(<span class="string">'ss'</span>,<span class="string">'ssssss123456'</span>);</span><br></pre></td></tr></table></figure>
+<p>我们给USer函数添加两个方法到User.prototypr对象中，当我们使用new操作符创建User的实例时，产生的对象u得到了自动分配的原型对象。</p>
+<p>u.name和u.passwordHash返回的是对象u的直接属性当前值，如果没有找到，才会去接着找u的原型对象，即User.prototype中的方法。</p>
+<p>构造函数的prototype属性用来设置原型，那检测原型可以这样做：</p>
+<p>Object.getPrototypeOf(u) === USer.prototype;//true</p>
+<h3 id="实例分析"><a href="#实例分析" class="headerlink" title="实例分析"></a>实例分析</h3><p>那么怎么运用呢？</p>
+<p>最近写了一个抽奖小游戏</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">GiftsGame</span>(<span class="params">jTarget, lotteryCode</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.wrapp = jTarget;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.isWinner = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.tipMsg = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.responseCode = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.isLogined = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.code = lotteryCode;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.lotteryPrize = [];</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.isGoing = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.hasChances = <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.userLevel = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.isBegining = <span class="literal">true</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>.theEnd = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">var</span> _this = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">     <span class="keyword">this</span>.init();</span><br><span class="line"></span><br><span class="line">   </span><br><span class="line"></span><br><span class="line">     _this.cookieValue = <span class="string">""</span>;</span><br><span class="line"></span><br><span class="line">&#125; <span class="comment">// GitGame函数保存一系列变量</span></span><br></pre></td></tr></table></figure>
+<p>以更新用户中奖名单的功能来说，通过建立原型方式调用：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">GiftsGame.prototype.updateWinner = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">var</span> _this = <span class="keyword">this</span>;</span><br><span class="line"></span><br><span class="line">        setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">            &#125;);</span><br><span class="line"></span><br><span class="line">        &#125;, <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">            <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">             * 混淆用户pin</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">             */</span></span><br><span class="line"></span><br><span class="line">       <span class="function"><span class="keyword">function</span> <span class="title">confusePin</span>(<span class="params">pin</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">       &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">/**</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">         * 滚动显示获奖信息</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">         * @param wrapper</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">         * @param time</span></span><br><span class="line"><span class="comment"></span></span><br><span class="line"><span class="comment">         */</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">autoScorll</span>(<span class="params">wrapper, winnerLen</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">     &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+<p>这种方法有什么好处呢，我是这么理解的，对于这个抽奖小游戏，大主体就是这个GiftsGame，实际上可以看成只有这个函数，下面都是这个函数的各个功能，这样的话就很有归纳和继承性，并且不会影响除这个游戏外的抽蛋小游戏和抓鸡小游戏的东西。</p>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/JavaScript/">JavaScript</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>

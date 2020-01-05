@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html>
+  <!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+  
+  <title>Day learn,day up-2(日常更新) - AnChen 的博客</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+  
+  <meta name="keywords" content="前端零碎">
+  
+    <meta name="description" content="进阶之路">
+  
+  
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=1.02">
+  
+  
+    <link rel="alternate" href="/atom.xml " title="AnChen 的博客" type="application/atom+xml">
+  
+
+  <link rel="stylesheet" href="/css/style.css">
+</head></html>
+  <body>
+    <div class="container">
+      <header class="header">
+  <div class="blog-title">
+    <a href="/" class="logo">AnChen 的博客</a>
+    <div class="subtitle">一直向前就是进步</div>
+  </div>
+  <nav class="navbar">
+    <ul class="menu">
+      
+        <li class="menu-item">
+          <a href="/archives" class="menu-item-link">主页</a>
+        </li>
+      
+    </ul>
+  </nav>
+</header>
+<article class="post">
+  <div class="post-title">
+    <h1 class="article-title">Day learn,day up-2(日常更新)</h1>
+  </div>
+   <div class="post-meta">
+    <span class="post-time">2018-12-04</span>
+  </div>
+  
+    <div id="toc" class="toc-article">
+      <strong class="toc-title">文章目录</strong>
+    <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#前言"><span class="toc-text">前言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#工具"><span class="toc-text">工具</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#hexo迁移"><span class="toc-text">hexo迁移</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#JavaScript"><span class="toc-text">JavaScript</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Object-assign"><span class="toc-text">Object.assign()</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Promise"><span class="toc-text">Promise</span></a></li></ol></li></ol>
+    </div>
+    
+  <div class="post-content">
+    <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>忽略我这个中文式英语的标题。</p>
+<p>身为一个记性不咋地的前端渣渣，觉得平时看的一些文章太散了，特开此文作为一种记录，可谓好记性不如烂笔头，也算是逼自己要经常学习。文章的日期为最后更新时间，题目顺序不分先后，希望能经常保持置顶状态，目录到达一定长度时会重开一篇。</p>
+<h2 id="工具"><a href="#工具" class="headerlink" title="工具"></a>工具</h2><h3 id="hexo迁移"><a href="#hexo迁移" class="headerlink" title="hexo迁移"></a>hexo迁移</h3><p>因为我的笔记本电脑最近瓦特了，所以不得不把博客迁出来，在这里做个记录，方便下次查找。 </p>
+<ul>
+<li><p>将原来的电脑上原有的hexo目录拷贝到新电脑，只需拷贝以下目录：</p>
+<ul>
+<li>_config.yml</li>
+<li>package.json</li>
+<li>scaffolds/</li>
+<li>source/</li>
+<li>themes/</li>
+</ul>
+</li>
+<li><p>在新电脑安装hexo</p>
+<p><code>npm install -g hexo</code></p>
+</li>
+<li><p>安装后进入hexo/目录</p>
+</li>
+<li><p>安装模块</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">npm install</span><br><span class="line">npm install hexo-deployer-git --save</span><br><span class="line">npm install hexo-generator-feed --save</span><br><span class="line">npm install hexo-generator-sitemap --save</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>然后重新配置github</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">git config --global user.name &quot;YOUR NAME&quot;</span><br><span class="line">git config --global user.email &quot;YOUR EMAIL ADDRESS&quot;</span><br></pre></td></tr></table></figure>
+<p><strong>Authenticating with GitHub from Git</strong></p>
+<ul>
+<li><p>在 Git Bash 下执行如下命令，生成 SSH key</p>
+<p><code>ssh-keygen -t rsa -b 4096 -C &quot;your_email@example.com&quot;</code></p>
+<p>email为自己的github账号，剩下的一路回车即可。</p>
+</li>
+<li><p>将 SSH key 添加到 ssh-agent</p>
+<ul>
+<li>在 Git Bash 下执行如下命令，开启 ssh-agent</li>
+</ul>
+<p><code>eval &quot;$(ssh-agent -s)&quot;</code></p>
+<ul>
+<li>将这个 SSH key 添加到 ssh-agent 里去</li>
+</ul>
+<p><code>ssh-add ~/.ssh/id_rsa</code></p>
+</li>
+<li><p>将 SSH key 添加到 Github 账户</p>
+<ul>
+<li>在 Git Bash 中将 SSH Key 拷贝出来：</li>
+</ul>
+<p><code>clip &lt; ~/.ssh/id_rsa.pub</code></p>
+<p>此时，SSH Key 已经在我们的剪切板里了。然后登录 Github 帐号，依次点击自己的头像，<strong>Settings</strong>，<strong>SSH and GPG keys</strong>， <strong>Add SSH key</strong>， 在 <strong>Title</strong> 这里输入 Key 的label，比如 <code>your_name - PC</code>，然后在 Key 里面把 <strong>SSH Key</strong> 粘贴进去，点击 <strong>Add SSH key</strong> 大功告成。</p>
+</li>
+<li><p>测试 SSH 连接，在 Git Bash 中敲入</p>
+</li>
+</ul>
+<p><code>ssh -T git@github.com</code></p>
+</li>
+<li><p>做完上面这些后 执行hexo deploy 大功告成</p>
+</li>
+<li><p>但是我还是报错，hexo error fatal httprequestexception encountered….</p>
+<p>后来在<a href="https://github.com/hexojs/hexo/issues/3043" target="_blank" rel="noopener">https://github.com/hexojs/hexo/issues/3043</a> 这里找到解决方法</p>
+<p>把repo的配置方式改一下，任何就可以了。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repo: git@github.com:anchen1204/anchen1204.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+<p>以上方法结合了这两篇文章：</p>
+<p><a href="https://blog.csdn.net/eternity1118_/article/details/71194395?ref=myread" target="_blank" rel="noopener">hexo：更换电脑，如何继续写博客</a></p>
+<p><a href="http://lowrank.science/Hexo-Migration/" target="_blank" rel="noopener">多机更新 Hexo 博客</a></p>
+</li>
+</ul>
+<h2 id="JavaScript"><a href="#JavaScript" class="headerlink" title="JavaScript"></a>JavaScript</h2><h3 id="Object-assign"><a href="#Object-assign" class="headerlink" title="Object.assign()"></a>Object.assign()</h3><p>语法：<code>Object.assign(target, ...sources );</code></p>
+<p>参数：</p>
+<p><em>target</em>：必需。可枚举属性复制到的对象。</p>
+<p><em>…sources</em>：必需。从其中复制可枚举属性的对象。</p>
+<p>实例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> first = &#123; <span class="attr">name</span>: <span class="string">"Bob"</span> &#125;;</span><br><span class="line"><span class="keyword">var</span> last = &#123; <span class="attr">lastName</span>: <span class="string">"Smith"</span> &#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> person = <span class="built_in">Object</span>.assign(first, last);</span><br><span class="line"><span class="built_in">console</span>.log(person);<span class="comment">//&#123; name: "Bob", lastName: "Smith" &#125;</span></span><br></pre></td></tr></table></figure>
+<p>看阮一峰大神的<a href="http://es6.ruanyifeng.com/#docs/style#Map-%E7%BB%93%E6%9E%84" target="_blank" rel="noopener">ES6-编程风格</a> :</p>
+<p>对象尽量静态化，一旦定义，就不得随意添加新的属性。如果添加属性不可避免，要使用<code>Object.assign</code>方法。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// bad</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;&#125;;</span><br><span class="line">a.x = <span class="number">3</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// if reshape unavoidable</span></span><br><span class="line"><span class="keyword">const</span> a = &#123;&#125;;</span><br><span class="line"><span class="built_in">Object</span>.assign(a, &#123; <span class="attr">x</span>: <span class="number">3</span> &#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// good</span></span><br><span class="line"><span class="keyword">const</span> a = &#123; <span class="attr">x</span>: <span class="literal">null</span> &#125;;</span><br><span class="line">a.x = <span class="number">3</span>;</span><br></pre></td></tr></table></figure>
+<h3 id="Promise"><a href="#Promise" class="headerlink" title="Promise"></a>Promise</h3><p>阅读(按左到右顺序)：    <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Guide/Using_promises" target="_blank" rel="noopener">使用 Promises</a>  <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener">Promise</a> </p>
+<p>这两天又看了一遍Promise的内容，觉得这个对象真的非常好用。</p>
+<p>做个总结呗，其实在项目中已经快乐地用起来了，很方便。</p>
+<p>它存在的意义？还不是因为javaScript是世界上最好的…不对，说错台词了，应该是javaScript是单线程语言。</p>
+<p>我们经常为了解决这个问题，使用的是回调函数，俗称callback，为了达到异步执行。比如<code>setTimeout</code> ,比如AJAX异步操作。</p>
+<p>具体介绍不表，可以看文档。直接说使用吧。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>( <span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;...&#125; <span class="comment">/* executor */</span>  );</span><br></pre></td></tr></table></figure>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Initial'</span>);</span><br><span class="line"></span><br><span class="line">    resolve();</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">throw</span> <span class="keyword">new</span> <span class="built_in">Error</span>(<span class="string">'Something failed'</span>);</span><br><span class="line">        </span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Do this'</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.catch(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Do that'</span>);</span><br><span class="line">&#125;)</span><br><span class="line">.then(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="string">'Do this whatever happened before'</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>.then()</code>是链式调用，获取上一个Promise resolve返回的对象进行操作；</p>
+<p><code>.catch()</code> 原理同then，但是是针对Promise 的reject返回的对象进行操作；</p>
+<p>注意：在一个失败操作（即一个 <code>catch</code>）之后可以继续使用链式操作，即使链式中的一个动作失败之后还能有助于新的动作继续完成。</p>
+<p>即链式调用不会因为其中一个环节失败(reject)而中断。</p>
+<p>好用组合：</p>
+<p><code>Promise.resolve()</code> &amp;<code>Promise.reject()</code></p>
+<p>这两个是手动创建一个已经resolve或者reject的promise快捷方法。</p>
+<p><code>Promise.race()</code> 和<code>Promise.all()</code></p>
+<p>这两个用法一样，其实括号内都是多个Promise对象</p>
+<p>但是不同的地方在于：</p>
+<p><code>Promise.all(iterable)</code> 方法返回一个 <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise" target="_blank" rel="noopener"><code>Promise</code></a> 实例，此实例在 iterable参数内所有的 promise 都完成（resolved），或参数中不包含 promise 时回调完成（resolve）；<strong>如果参数中  <code>promise</code> 有一个失败（rejected），此实例回调失败（reject），失败原因的是第一个失败 <code>promise</code> 的结果。</strong></p>
+<p><code>Promise.race(iterable)</code>方法返回一个 promise，<strong>一旦迭代器中的某个promise解决或拒绝，返回的 promise就会解决或拒绝。</strong></p>
+<p>一句话，前者如果有一个失败，则之间返回第一个失败(catch里)；后者只会返回第一个处理的失败或者成功。</p>
+<p>举个实际可能会使用的例子：</p>
+<p>Promise.all是很适合来解决多个Promise是用于获取请求基本信息，比如app里的登陆信息，ticket，版本号，它们都获取成功后可以接着执行可能下一步的请求。。。</p>
+<p>Promise.race很适合容错现象，比如接口超时：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//网络超时写法：Promise.race()</span></span><br><span class="line"><span class="keyword">let</span> promise1 = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">resolve</span>=&gt;</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">'数据已返回'</span>;</span><br><span class="line">    &#125;,<span class="number">5000</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="keyword">let</span> promise2= <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="params">reject</span>=&gt;</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">        reject(<span class="string">'网络超时'</span>)</span><br><span class="line">    &#125;,<span class="number">4000</span>)</span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">Promise</span>.race([promise1,promise2]).then(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;).catch(<span class="function"><span class="params">res</span>=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(res)</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+  </div>
+  <div class="post-footer">
+    
+      <ul class="post-tag-list"><li class="post-tag-list-item"><a class="post-tag-list-link" href="/tags/前端零碎/">前端零碎</a></li></ul>
+    
+
+    <a href="#top" class="top">返回顶部</a>
+  </div>
+</article>
+<footer>
+  &copy; 2020
+  <span class="author">
+    An Chen
+  </span>
+</footer>
+    </div>
+  </body>
+</html>
