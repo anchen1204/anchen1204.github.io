@@ -2,6 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>http://yoursite.com/2018/12/04/learn-2/</loc>
+    
+    <lastmod>2020-03-29T14:08:39.000Z</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>http://yoursite.com/2018/08/13/learn-1/</loc>
+    
+    <lastmod>2020-03-29T14:08:13.000Z</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>http://yoursite.com/2017/04/05/%E6%8F%90%E9%AB%98%E7%BD%91%E9%A1%B5%E6%80%A7%E8%83%BD%E7%9A%84%E8%B6%85%E5%AE%9E%E7%94%A8%E6%96%B9%E6%B3%95/</loc>
     
     <lastmod>2019-07-03T08:22:26.000Z</lastmod>
@@ -12,20 +26,6 @@
     <loc>http://yoursite.com/2019/02/13/phaser%E5%85%A5%E9%97%A8/</loc>
     
     <lastmod>2019-07-03T08:20:41.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/12/04/Day%20learn,Day%20up-2/</loc>
-    
-    <lastmod>2019-07-03T08:20:27.000Z</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>http://yoursite.com/2018/08/13/Day%20learn,Day%20up-1/</loc>
-    
-    <lastmod>2019-07-03T08:20:23.000Z</lastmod>
     
   </url>
   
